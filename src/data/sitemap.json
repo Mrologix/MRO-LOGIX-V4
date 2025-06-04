@@ -1,0 +1,236 @@
+[
+  {
+    "id": "contact-page",
+    "name": "Contact",
+    "type": "page",
+    "path": "/contact",
+    "filePath": "src/app/contact/page.tsx",
+    "description": "Contact page for support and inquiries",
+    "keywords": ["contact", "support", "help"]
+  },
+  {
+    "id": "dashboard-page",
+    "name": "Dashboard",
+    "type": "page",
+    "path": "/dashboard",
+    "filePath": "src/app/dashboard/page.tsx",
+    "description": "Main dashboard overview page",
+    "keywords": ["dashboard", "overview", "home"]
+  },
+  {
+    "id": "ai-chat-page",
+    "name": "AI Chat",
+    "type": "page",
+    "path": "/dashboard/ai-chat",
+    "filePath": "src/app/dashboard/ai-chat/page.tsx",
+    "description": "AI-powered chat assistant for support and guidance",
+    "keywords": ["ai", "chat", "support", "assistant"]
+  },
+  {
+    "id": "aircraft-parts-cycle",
+    "name": "Aircraft Parts Cycle",
+    "type": "page",
+    "path": "/dashboard/aircraft-parts-cycle",
+    "filePath": "src/app/dashboard/aircraft-parts-cycle/page.tsx",
+    "description": "Track and manage aircraft parts lifecycle",
+    "keywords": ["parts", "lifecycle", "aircraft", "maintenance"]
+  },
+  {
+    "id": "company-reports",
+    "name": "Company Reports",
+    "type": "page",
+    "path": "/dashboard/company-reports",
+    "filePath": "src/app/dashboard/company-reports/page.tsx",
+    "description": "View and generate company-wide reports",
+    "keywords": ["reports", "analytics", "company", "statistics"]
+  },
+  {
+    "id": "customers-vendors",
+    "name": "Customers & Vendors",
+    "type": "page",
+    "path": "/dashboard/customers-vendors",
+    "filePath": "src/app/dashboard/customers-vendors/page.tsx",
+    "description": "Manage customer and vendor relationships",
+    "keywords": ["customers", "vendors", "relationships", "management"]
+  },
+  {
+    "id": "data-analytics",
+    "name": "Data Analytics",
+    "type": "page",
+    "path": "/dashboard/data-analytics",
+    "filePath": "src/app/dashboard/data-analytics/page.tsx",
+    "description": "Comprehensive data analytics dashboard",
+    "keywords": ["analytics", "data", "insights", "metrics"]
+  },
+  {
+    "id": "defect-trend",
+    "name": "Defect Trend Analysis",
+    "type": "page",
+    "path": "/dashboard/data-analytics/defect-trend-over-time",
+    "filePath": "src/app/dashboard/data-analytics/defect-trend-over-time/page.tsx",
+    "description": "Analyze defect trends over time",
+    "keywords": ["defects", "trends", "analysis", "time-series"]
+  },
+  {
+    "id": "document-storage",
+    "name": "Document Storage",
+    "type": "page",
+    "path": "/dashboard/document-storage",
+    "filePath": "src/app/dashboard/document-storage/page.tsx",
+    "description": "Store and manage important documents",
+    "keywords": ["documents", "storage", "files", "management"]
+  },
+  {
+    "id": "employee-shifts",
+    "name": "Employee Shifts",
+    "type": "page",
+    "path": "/dashboard/employee-shifts",
+    "filePath": "src/app/dashboard/employee-shifts/page.tsx",
+    "description": "Manage employee work shifts and schedules",
+    "keywords": ["shifts", "employees", "scheduling", "roster"]
+  },
+  {
+    "id": "flight-records",
+    "name": "Flight Records",
+    "type": "page",
+    "path": "/dashboard/flight-records",
+    "filePath": "src/app/dashboard/flight-records/page.tsx",
+    "description": "View and manage flight records",
+    "keywords": ["flights", "records", "logs", "tracking"]
+  },
+  {
+    "id": "forms-creation",
+    "name": "Forms Creation",
+    "type": "page",
+    "path": "/dashboard/forms-creation",
+    "filePath": "src/app/dashboard/forms-creation/page.tsx",
+    "description": "Create and manage custom forms",
+    "keywords": ["forms", "creation", "templates", "custom"]
+  },
+  {
+    "id": "gantt-schedule",
+    "name": "Gantt Chart Schedule",
+    "type": "page",
+    "path": "/dashboard/gantt-chart-schedule",
+    "filePath": "src/app/dashboard/gantt-chart-schedule/page.tsx",
+    "description": "View and manage project schedules in Gantt chart format",
+    "keywords": ["gantt", "schedule", "timeline", "projects"]
+  },
+  {
+    "id": "internal-audits",
+    "name": "Internal Audits",
+    "type": "page",
+    "path": "/dashboard/internal-audits",
+    "filePath": "src/app/dashboard/internal-audits/page.tsx",
+    "description": "Conduct and manage internal audits",
+    "keywords": ["audits", "internal", "compliance", "review"]
+  },
+  {
+    "id": "log-pages",
+    "name": "Log Pages",
+    "type": "page",
+    "path": "/dashboard/log-pages",
+    "filePath": "src/app/dashboard/log-pages/page.tsx",
+    "description": "View and manage maintenance log pages",
+    "keywords": ["logs", "maintenance", "records", "pages"]
+  },
+  {
+    "id": "roster",
+    "name": "Roster",
+    "type": "page",
+    "path": "/dashboard/roster",
+    "filePath": "src/app/dashboard/roster/page.tsx",
+    "description": "Manage employee rosters and assignments",
+    "keywords": ["roster", "employees", "scheduling", "assignments"]
+  },
+  {
+    "id": "sdr-reports",
+    "name": "SDR Reports",
+    "type": "page",
+    "path": "/dashboard/sdr-reports",
+    "filePath": "src/app/dashboard/sdr-reports/page.tsx",
+    "description": "Service Difficulty Reports management",
+    "keywords": ["sdr", "reports", "service", "difficulty"]
+  },
+  {
+    "id": "sms-audits",
+    "name": "SMS Audits",
+    "type": "page",
+    "path": "/dashboard/sms-audits",
+    "filePath": "src/app/dashboard/sms-audits/page.tsx",
+    "description": "Safety Management System audits",
+    "keywords": ["sms", "audits", "safety", "management"]
+  },
+  {
+    "id": "sms-reports",
+    "name": "SMS Reports",
+    "type": "page",
+    "path": "/dashboard/sms-reports",
+    "filePath": "src/app/dashboard/sms-reports/page.tsx",
+    "description": "Safety Management System reports",
+    "keywords": ["sms", "reports", "safety", "management"]
+  },
+  {
+    "id": "stock-inventory",
+    "name": "Stock Inventory",
+    "type": "page",
+    "path": "/dashboard/stock-inventory",
+    "filePath": "src/app/dashboard/stock-inventory/page.tsx",
+    "description": "Manage parts and inventory stock",
+    "keywords": ["inventory", "stock", "parts", "management"]
+  },
+  {
+    "id": "technician-training",
+    "name": "Technician Training",
+    "type": "page",
+    "path": "/dashboard/technician-training",
+    "filePath": "src/app/dashboard/technician-training/page.tsx",
+    "description": "Manage technician training and certifications",
+    "keywords": ["training", "technicians", "certifications", "education"]
+  },
+  {
+    "id": "work-orders",
+    "name": "Work Orders",
+    "type": "page",
+    "path": "/dashboard/work-orders",
+    "filePath": "src/app/dashboard/work-orders/page.tsx",
+    "description": "Create and manage work orders",
+    "keywords": ["work", "orders", "tasks", "maintenance"]
+  },
+  {
+    "id": "forgot-password",
+    "name": "Forgot Password",
+    "type": "page",
+    "path": "/forgot-password",
+    "filePath": "src/app/forgot-password/page.tsx",
+    "description": "Reset forgotten password",
+    "keywords": ["password", "reset", "forgot", "account"]
+  },
+  {
+    "id": "register",
+    "name": "Register",
+    "type": "page",
+    "path": "/register",
+    "filePath": "src/app/register/page.tsx",
+    "description": "Create a new account",
+    "keywords": ["register", "signup", "account", "new"]
+  },
+  {
+    "id": "signin",
+    "name": "Sign In",
+    "type": "page",
+    "path": "/signin",
+    "filePath": "src/app/signin/page.tsx",
+    "description": "Sign in to your account",
+    "keywords": ["signin", "login", "account", "access"]
+  },
+  {
+    "id": "verify",
+    "name": "Verify Account",
+    "type": "page",
+    "path": "/verify",
+    "filePath": "src/app/verify/page.tsx",
+    "description": "Verify your account email",
+    "keywords": ["verify", "email", "account", "confirmation"]
+  }
+]

@@ -1,0 +1,449 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Attachment {
+  id             String       @id @default(uuid())
+  fileName       String
+  fileKey        String
+  fileSize       Int
+  fileType       String
+  flightRecordId String
+  createdAt      DateTime     @default(now())
+  FlightRecord   FlightRecord @relation(fields: [flightRecordId], references: [id], onDelete: Cascade)
+}
+
+model PartReplacement {
+  id             String       @id @default(uuid())
+  pnOff          String?
+  snOff          String?
+  pnOn           String?
+  snOn           String?
+  flightRecordId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  FlightRecord   FlightRecord @relation(fields: [flightRecordId], references: [id], onDelete: Cascade)
+}
+
+model FlightRecord {
+  id                String            @id @default(uuid())
+  date              DateTime
+  airline           String
+  fleet             String
+  station           String
+  service           String
+  tail              String?
+  hasTime           Boolean           @default(false)
+  blockTime         String?
+  outTime           String?
+  hasDefect         Boolean           @default(false)
+  logPageNo         String?
+  discrepancyNote   String?
+  rectificationNote String?
+  systemAffected    String?
+  defectStatus      String?
+  riiRequired       Boolean           @default(false)
+  inspectedBy       String?
+  hasAttachments    Boolean           @default(false)
+  hasComment        Boolean           @default(false)
+  comment           String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  technician        String?
+  flightNumber      String?
+  fixingManual      String?
+  manualReference   String?
+  hasPartReplaced   Boolean           @default(false)
+  Attachment        Attachment[]
+  PartReplacement   PartReplacement[]
+}
+
+model User {
+  id           String    @id @default(uuid())
+  firstName    String
+  lastName     String
+  username     String    @unique
+  email        String    @unique
+  password     String
+  pin          String?
+  pinCreatedAt DateTime?
+  verified     Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  // Document Storage Relations
+  documentFolders    DocumentFolder[]
+  documentFiles      DocumentFile[]
+  sharedFiles        DocumentFileShare[]
+  
+  // User Activity Relations
+  activities         UserActivity[]
+
+  // Manuals Relations
+  createdManuals     Manual[]        @relation("CreatedManuals")
+  updatedManuals     Manual[]        @relation("UpdatedManuals")
+  manualComments     ManualComment[]
+
+  // Manual Version Edits
+  editedManualVersions ManualVersion[] @relation("UserEditedManualVersions")
+}
+
+model StockInventoryAttachment {
+  id               String         @id @default(uuid())
+  fileName         String
+  fileKey          String
+  fileSize         Int
+  fileType         String
+  stockInventoryId String
+  createdAt        DateTime       @default(now())
+  StockInventory   StockInventory @relation(fields: [stockInventoryId], references: [id], onDelete: Cascade)
+}
+
+model StockInventory {
+  id                String                     @id @default(uuid())
+  incomingDate      DateTime
+  station           String
+  customStation     String?
+  owner             String
+  customOwner       String?
+  description       String
+  partNo            String
+  serialNo          String
+  quantity          String
+  hasExpireDate     Boolean                    @default(false)
+  expireDate        DateTime?
+  type              String
+  customType        String?
+  location          String
+  customLocation    String?
+  hasInspection     Boolean                    @default(false)
+  inspectionResult  String?
+  inspectionFailure String?
+  customFailure     String?
+  hasComment        Boolean                    @default(false)
+  comment           String?
+  hasAttachments    Boolean                    @default(false)
+  technician        String?
+  createdAt         DateTime                   @default(now())
+  updatedAt         DateTime                   @updatedAt
+  Attachment        StockInventoryAttachment[]
+  IncomingInspection    IncomingInspection[]
+}
+
+model TemperatureControl {
+  id             String   @id @default(uuid())
+  date           DateTime
+  location       String
+  customLocation String?
+  time           String
+  temperature    Float
+  humidity       Float
+  employeeName   String
+  hasComment     Boolean  @default(false)
+  comment        String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model IncomingInspectionAttachment {
+  id                    String             @id @default(uuid())
+  fileName              String
+  fileKey               String
+  fileSize              Int
+  fileType              String
+  incomingInspectionId  String
+  incomingInspection    IncomingInspection @relation(fields: [incomingInspectionId], references: [id], onDelete: Cascade)
+  createdAt             DateTime           @default(now())
+}
+
+model IncomingInspection {
+  id                    String                        @id @default(uuid())
+  inspectionDate        DateTime
+  inspector             String
+  stockInventoryId      String?                       // Make this nullable
+  stockInventoryDeleted Boolean                       @default(false)
+  partNo                String?                       // Store the part number
+  serialNo              String?                       // Store the serial number
+  description           String?                       // Store the description
+  productMatch          String?                       // YES, NO, N/A
+  productSpecs          String?                       // YES, NO, N/A
+  batchNumber           String?                       // YES, NO, N/A
+  productObservations   String?
+  quantityMatch         String?                       // YES, NO, N/A
+  physicalCondition     String?                       // YES, NO, N/A
+  expirationDate        String?                       // YES, NO, N/A
+  serviceableExpiry     String?                       // YES, NO, N/A
+  physicalDefects       String?                       // YES, NO, N/A
+  suspectedUnapproved   String?                       // YES, NO, N/A
+  quantityObservations  String?
+  esdSensitive          String?                       // YES, NO, N/A
+  inventoryRecorded     String?                       // YES, NO, N/A
+  temperatureControl    String?                       // YES, NO, N/A
+  handlingObservations  String?
+  hasAttachments        Boolean                       @default(false)
+  createdAt             DateTime                      @default(now())
+  updatedAt             DateTime                      @updatedAt
+  Attachment            IncomingInspectionAttachment[]
+  StockInventory        StockInventory?               @relation(fields: [stockInventoryId], references: [id], onDelete: SetNull)
+}
+
+// Document Storage Models
+model DocumentFolder {
+  id           String           @id @default(uuid())
+  name         String
+  parentId     String?          // For nested folder structure
+  userId       String           // Owner of the folder
+  path         String           // Full path for easy navigation
+  description  String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  
+  // Self-referential relationship for nested folders
+  parent       DocumentFolder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children     DocumentFolder[] @relation("FolderHierarchy")
+  
+  // Files in this folder
+  files        DocumentFile[]
+  manuals      Manual[]
+  
+  // Relation to User
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([parentId])
+  @@index([userId])
+  @@index([path])
+}
+
+model DocumentFile {
+  id           String          @id @default(uuid())
+  name         String          // Original file name
+  fileName     String          // Display name (can be renamed)
+  fileKey      String          @unique // S3 key
+  fileSize     Int             // File size in bytes
+  fileType     String          // MIME type
+  folderId     String?         // Optional folder (can be in root)
+  userId       String          // Owner of the file
+  path         String          // Full path for easy navigation
+  description  String?
+  tags         String[]        // Array of tags for categorization
+  isShared     Boolean         @default(false)
+  isPublic     Boolean         @default(false)
+  downloadCount Int            @default(0)
+  lastAccessedAt DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  
+  // Relations
+  folder       DocumentFolder? @relation(fields: [folderId], references: [id], onDelete: Cascade)
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // File sharing
+  sharedWith   DocumentFileShare[]
+  manualVersions ManualVersion[]
+  
+  @@index([folderId])
+  @@index([userId])
+  @@index([fileKey])
+  @@index([path])
+}
+
+model DocumentFileShare {
+  id           String       @id @default(uuid())
+  fileId       String
+  sharedWithUserId String
+  permission   String       // "view" or "edit"
+  sharedAt     DateTime     @default(now())
+  expiresAt    DateTime?
+  
+  file         DocumentFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  sharedWith   User         @relation(fields: [sharedWithUserId], references: [id], onDelete: Cascade)
+  
+  @@unique([fileId, sharedWithUserId])
+  @@index([sharedWithUserId])
+}
+
+model AirportIDAttachment {
+  id           String    @id @default(uuid())
+  fileName     String
+  fileKey      String
+  fileSize     Int
+  fileType     String
+  airportIdId  String
+  createdAt    DateTime  @default(now())
+  AirportID    AirportID @relation(fields: [airportIdId], references: [id], onDelete: Cascade)
+}
+
+model AirportID {
+  id                String               @id @default(uuid())
+  employeeName      String
+  station           String
+  customStation     String?
+  idIssuedDate      DateTime
+  badgeIdNumber     String
+  expireDate        DateTime
+  hasComment        Boolean              @default(false)
+  comment           String?
+  hasAttachment     Boolean              @default(false)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  Attachment        AirportIDAttachment[]
+}
+
+model UserActivity {
+  id             String   @id @default(uuid())
+  userId         String
+  action         String   // LOGIN, LOGOUT, ADDED_FLIGHT_RECORD, DELETED_FLIGHT_RECORD, etc.
+  resourceType   String?  // FLIGHT_RECORD, STOCK_INVENTORY, TEMPERATURE_CONTROL, AIRPORT_ID
+  resourceId     String?  // ID of the specific resource affected
+  resourceTitle  String?  // Human-readable title/description of the resource
+  metadata       Json?    // Additional data about the activity (flexible JSON field)
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime @default(now())
+  
+  // Relation to User
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([action])
+  @@index([resourceType])
+  @@index([createdAt])
+}
+
+model TechnicianTrainingAttachment {
+  id                    String              @id @default(uuid())
+  fileName              String
+  fileKey               String
+  fileSize              Int
+  fileType              String
+  technicianTrainingId  String
+  createdAt             DateTime            @default(now())
+  TechnicianTraining    TechnicianTraining  @relation(fields: [technicianTrainingId], references: [id], onDelete: Cascade)
+}
+
+model TechnicianTraining {
+  id              String                        @id @default(uuid())
+  date            DateTime
+  technician      String
+  organization    String
+  customOrg       String?
+  type            String
+  customType      String?
+  training        String
+  hasEngine       Boolean                       @default(false)
+  engineType      String?
+  hasHours        Boolean                       @default(false)
+  hours           Float?
+  hasComment      Boolean                       @default(false)
+  comment         String?
+  hasAttachments  Boolean                       @default(false)
+  createdAt       DateTime                      @default(now())
+  updatedAt       DateTime                      @updatedAt
+  Attachment      TechnicianTrainingAttachment[]
+}
+
+// =========================
+// Manual Management Models
+// =========================
+
+enum ManualStatus {
+  DRAFT
+  APPROVED
+  ARCHIVED
+}
+
+model ManualCategory {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  manuals     Manual[]
+}
+
+model AttributeSet {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  definition  Json?
+  createdAt   DateTime @default(now())
+
+  manuals     Manual[]
+}
+
+model Manual {
+  id                String          @id @default(cuid())
+  name              String
+  number            String          @unique
+  revision          String
+  revisionDate      DateTime        // Added revision date field
+  status            ManualStatus    @default(DRAFT)
+  fileKey           String?         // Changed from filePath to fileKey for S3
+  fileType          String
+  fileSize          Int
+  keywords          String[]
+  description       String?
+  barcode           String?
+  folderId          String?
+  categoryId        String?
+  attributeSetId    String?
+  attributeInstance Json?
+  currentVersionId  String?         @unique
+  createdById       String
+  updatedById       String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relations
+  folder            DocumentFolder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  category          ManualCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  attributeSet      AttributeSet?   @relation(fields: [attributeSetId], references: [id], onDelete: SetNull)
+  currentVersion    ManualVersion?  @relation("CurrentManualVersion", fields: [currentVersionId], references: [id])
+  versions          ManualVersion[] @relation("ManualVersions")
+  createdBy         User            @relation("CreatedManuals", fields: [createdById], references: [id], onDelete: Cascade)
+  updatedBy         User?           @relation("UpdatedManuals", fields: [updatedById], references: [id])
+  comments          ManualComment[]
+
+  @@index([name])
+  @@index([categoryId])
+  @@index([attributeSetId])
+  @@map("manuals")
+}
+
+model ManualVersion {
+  id            String        @id @default(uuid())
+  versionNumber Int
+  fileId        String
+  manualId      String
+  editorId      String?
+  comment       String?
+  createdAt     DateTime      @default(now())
+
+  // Relations
+  file          DocumentFile  @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  manual        Manual        @relation("ManualVersions", fields: [manualId], references: [id], onDelete: Cascade)
+  editor        User?         @relation("UserEditedManualVersions", fields: [editorId], references: [id], onDelete: SetNull)
+  manualCurrent Manual?       @relation("CurrentManualVersion")
+
+  @@unique([manualId, versionNumber])
+  @@index([manualId])
+}
+
+model ManualComment {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  manualId  String
+  userId    String
+  manual    Manual   @relation(fields: [manualId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([manualId])
+  @@index([userId])
+}

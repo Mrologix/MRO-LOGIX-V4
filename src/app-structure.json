@@ -1,0 +1,183 @@
+{
+  "version": "1.1.0",
+  "lastUpdated": "2025-05-14T12:00:00Z",
+
+  "assistant": {
+    "systemPrompt": "You are the MRO Logix in-app assistant. For the first message in a chat session, start with: 'Welcome, {firstName} {lastName}!' followed by a brief, friendly greeting. Then, for the rest of the session, answer questions about the web app strictly from the JSON below. When referring to a page, always return the page name as a markdown link using its 'path'. If you cannot find the answer, say you don't know."
+  },
+
+  "app": {
+    "root": "/src/app",
+
+    "pages": [
+      {
+        "name": "Home",
+        "path": "/",
+        "file": "page.tsx",
+        "description": "Landing page showcasing MRO Logix and quick links to key features.",
+        "keywords": ["landing", "overview", "mro logix"],
+        "aliases": ["start", "main"]
+      }
+    ],
+
+    "dashboard": {
+      "root": "/dashboard",
+      "pages": [
+        {
+          "name": "Dashboard Home",
+          "path": "/dashboard",
+          "file": "dashboard/page.tsx",
+          "description": "Central overview of the MRO Logix system. Displays user information, flight record counts,user counts, current time, and provides quick access to key system functionalities and user profile.",
+          "keywords": ["summary", "dashboard", "overview", "stats", "quick actions", "user info"],
+          "aliases": ["overview", "main dashboard"],
+          "breadcrumbs": ["Dashboard"],
+          "features": [
+            "Displays current user information (name, email, username)",
+            "Shows total flight records count",
+            "Shows total active team members count",
+            "Displays current UTC and local time",
+            "Link to AI Chat (/dashboard/ai-chat)",
+            "Link to Maintenance Schedule (/dashboard/maintenance-schedule)",
+            "Link to Defect Analytics (/dashboard/defect-analytics)",
+            "Link to Flight Records (/dashboard/flight-records)",
+            "Quick Action: Add New Aircraft",
+            "Quick Action: Schedule Maintenance",
+            "Quick Action: Upload Document",
+            "Quick Action: Invite Team Member",
+            "Link to User Profile (/profile)"
+          ]
+        },
+        {
+          "name": "Aircraft Parts Cycle",
+          "path": "/dashboard/aircraft-parts-cycle",
+          "file": "dashboard/aircraft-parts-cycle/page.tsx",
+          "description": "Comprehensive tracking and management system for aircraft parts lifecycle, from procurement to retirement. Monitor installation dates, maintenance history, and compliance status.",
+          "keywords": ["parts", "tracking", "lifecycle", "maintenance", "inventory", "compliance"],
+          "aliases": ["parts cycle", "components", "parts tracking"],
+          "breadcrumbs": ["Dashboard", "Aircraft Parts"],
+          "features": [
+            "Interactive parts lifecycle timeline",
+            "Part installation and removal tracking",
+            "Maintenance history per component",
+            "Compliance status indicators",
+            "Part procurement tracking",
+            "Service life monitoring",
+            "Maintenance forecasting",
+            "Export parts history reports"
+          ]
+        },
+        {
+          "name": "Company Reports",
+          "path": "/dashboard/company-reports",
+          "file": "dashboard/company-reports/page.tsx",
+          "description": "Centralized reporting hub for generating comprehensive company-wide maintenance, compliance, and operational reports with customizable parameters and multiple export formats.",
+          "keywords": ["reports", "export", "company", "analytics", "compliance", "maintenance"],
+          "aliases": ["reports", "company analytics", "maintenance reports"],
+          "breadcrumbs": ["Dashboard", "Reports"],
+          "features": [
+            "Customizable report templates",
+            "Multiple export formats (PDF, Excel, CSV)",
+            "Scheduled report generation",
+            "Maintenance compliance reports",
+            "Parts lifecycle reports",
+            "Cost analysis reports",
+            "Team performance metrics",
+            "Historical data comparison"
+          ]
+        },
+
+        {
+          "name": "Data Analytics",
+          "path": "/dashboard/data-analytics",
+          "file": "dashboard/data-analytics/page.tsx",
+          "description": "Advanced analytics dashboard providing real-time insights into maintenance operations, defect patterns, and operational efficiency through interactive visualizations and AI-powered predictions.",
+          "keywords": ["analytics", "data", "charts", "insights", "predictions", "metrics"],
+          "aliases": ["analytics home", "insights dashboard", "metrics"],
+          "breadcrumbs": ["Dashboard", "Analytics"],
+          "features": [
+            "Real-time analytics dashboard",
+            "Interactive data visualizations",
+            "Predictive maintenance insights",
+            "Defect pattern analysis",
+            "Performance metrics tracking",
+            "Custom date range analysis",
+            "Export analytics reports",
+            "AI-powered trend predictions"
+          ],
+          "subPages": [
+            {
+              "name": "Defect Trend Over Time",
+              "path": "/dashboard/data-analytics/defect-trend-over-time",
+              "file": "dashboard/data-analytics/defect-trend-over-time/page.tsx",
+              "description": "Comprehensive defect analysis dashboard with interactive time-series visualizations, pattern recognition, and predictive insights for maintenance planning.",
+              "keywords": ["defect trend", "charts", "time series", "predictions", "patterns"],
+              "aliases": ["defect trend", "defect analysis", "trend dashboard"],
+              "breadcrumbs": ["Dashboard", "Analytics", "Defect Trends"],
+              "features": [
+                "Interactive time-series graphs",
+                "Defect category breakdown",
+                "Severity level analysis",
+                "Pattern recognition",
+                "Predictive trend analysis",
+                "Custom date range selection",
+                "Export trend reports"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Flight Records List",
+          "path": "/dashboard/flight-records",
+          "file": "dashboard/flight-records/page.tsx",
+          "description": "Lists all flight records. Allows searching, filtering, and creating new records.",
+          "keywords": ["flight records", "logbook", "maintenance logs", "aircraft logs", "search records"],
+          "aliases": ["records", "flight logs"],
+          "breadcrumbs": ["Dashboard", "Flight Records"],
+          "features": [
+            "View a list of all flight records",
+            "Search records by various criteria (tail, date, defect, etc.)",
+            "Filter records by status or other attributes",
+            "Create new flight records",
+            "Quick view of record summary",
+            "Link to individual flight record detail pages"
+          ]
+        },
+        {
+          "name": "Flight Record Detail",
+          "path": "/dashboard/flight-records/:id",
+          "file": "dashboard/flight-records/[id]/page.tsx",
+          "description": "Displays detailed information for a specific flight record, including attachments and defect history.",
+          "keywords": ["flight record detail", "log entry", "specific record", "attachments", "defect info"],
+          "aliases": ["view record", "record details"],
+          "breadcrumbs": ["Dashboard", "Flight Records", "Detail"],
+          "features": [
+            "View all fields of a flight record",
+            "Access and download attachments",
+            "Review discrepancy and rectification notes",
+            "See technician details",
+            "Edit the flight record (if permissions allow)",
+            "Delete the flight record (if permissions allow)"
+          ]
+        }
+      ]
+    },
+
+    "api": {
+      "root": "/api",
+      "endpoints": [
+        {
+          "path": "/api/ai-chat",
+          "file": "api/ai-chat/route.ts",
+          "description": "Handles all OpenAI chat completions.",
+          "method": "POST"
+        },
+        {
+          "path": "/api/auth/check",
+          "file": "api/auth/check/route.ts",
+          "description": "Returns authentication status.",
+          "method": "GET"
+        }
+      ]
+    }
+  }
+}
