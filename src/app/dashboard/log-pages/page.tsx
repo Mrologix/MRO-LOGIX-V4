@@ -138,26 +138,26 @@ export default function StockInventoryPage() {
         </div>
 
         {/* Log Pages Table */}
-        <div className="border rounded-lg bg-card overflow-hidden">
-          <div className="overflow-x-auto">
+        <div className="border rounded-lg bg-card overflow-hidden min-h-[450px]">
+          <div className="overflow-x-auto h-full">
             {loading ? (
-              <div className="flex justify-center items-center h-40">
+              <div className="flex justify-center items-center h-64">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
             ) : filteredPages.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">No log pages recorded</div>
+              <div className="p-8 text-center text-muted-foreground h-64 flex items-center justify-center">No log pages recorded</div>
             ) : (
-              <Table className="[&_tr]:h-1 [&_td]:py-1 [&_th]:py-1 [&_td]:px-2 [&_th]:px-2 text-xs leading-none">
+              <Table className="[&_tr]:h-10 [&_td]:py-2 [&_th]:py-2 [&_td]:px-3 [&_th]:px-3 text-sm">
                 <TableHeader>
-                  <TableRow className="border-b-[0.5px]">
-                    <TableHead className="h-3 font-medium">Tail</TableHead>
-                    <TableHead className="h-3 font-medium">Log Page</TableHead>
-                    <TableHead className="h-3 font-medium text-right">Count</TableHead>
+                  <TableRow className="border-b">
+                    <TableHead className="h-10 font-medium">Tail</TableHead>
+                    <TableHead className="h-10 font-medium">Log Page</TableHead>
+                    <TableHead className="h-10 font-medium text-right">Count</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredPages.map((page, idx) => (
-                    <TableRow key={idx} className="border-b-[0.5px]">
+                    <TableRow key={idx} className="border-b hover:bg-muted/50">
                       <TableCell className="whitespace-nowrap">{page.tail}</TableCell>
                       <TableCell className="whitespace-nowrap">
                         <Link href={`/dashboard/flight-records/${page.id}`} className="text-blue-600 underline hover:text-blue-800">

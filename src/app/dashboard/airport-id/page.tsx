@@ -368,7 +368,7 @@ export default function AirportIDPage() {
 
       {showForm && (
         <form onSubmit={handleSubmit} className="space-y-6 bg-card p-6 rounded-lg border">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
               <Label htmlFor="employeeName">Employee Name</Label>
               <Input
@@ -438,27 +438,6 @@ export default function AirportIDPage() {
             </div>
 
             <div className="space-y-2">
-              <Label>Comment</Label>
-              <Select value={hasComment} onValueChange={setHasComment}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select option" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Yes">Yes</SelectItem>
-                  <SelectItem value="No">No</SelectItem>
-                </SelectContent>
-              </Select>
-              {hasComment === 'Yes' && (
-                <Textarea
-                  placeholder="Enter comment"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  required
-                />
-              )}
-            </div>
-
-            <div className="space-y-2">
               <Label>Upload File</Label>
               <Select value={hasAttachment} onValueChange={setHasAttachment}>
                 <SelectTrigger>
@@ -482,6 +461,27 @@ export default function AirportIDPage() {
                     </span>
                   )}
                 </div>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label>Comment</Label>
+              <Select value={hasComment} onValueChange={setHasComment}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select option" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Yes">Yes</SelectItem>
+                  <SelectItem value="No">No</SelectItem>
+                </SelectContent>
+              </Select>
+              {hasComment === 'Yes' && (
+                <Textarea
+                  placeholder="Enter comment"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  required
+                />
               )}
             </div>
           </div>

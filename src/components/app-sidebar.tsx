@@ -26,7 +26,8 @@ import {
   ClipboardCheckIcon,
   DatabaseIcon,
   ActivityIcon,
-  GraduationCapIcon
+  GraduationCapIcon,
+  MessageSquareDot
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -77,6 +78,11 @@ const menuItems = [
     title: "Aircraft Parts Cycle",
     url: "/dashboard/aircraft-parts-cycle",
     icon: FileCogIcon,
+  },
+  {
+    title: "Technical Queries",
+    url: "/dashboard/technical-queries",
+    icon: MessageSquareDot,
   },
   {
     title: "Work Order Management",
@@ -174,7 +180,7 @@ const menuItems = [
     icon: GraduationCapIcon,
   },
   {
-    title: "Document Management",
+    title: "Technical Publications",
     url: "/dashboard/document-management",
     icon: FileTextIcon,
   },
@@ -257,7 +263,7 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 {menuItems
-                  .filter(item => ["Flight Records", "Stock Inventory", "Incoming Inspections", "Temperature Control", "Aircraft Parts Cycle"].includes(item.title))
+                  .filter(item => ["Flight Records", "Stock Inventory", "Incoming Inspections", "Temperature Control", "Aircraft Parts Cycle", "Technical Queries"].includes(item.title))
                   .map((item) => {
                     const isActive = pathname === item.url;
                     return (
@@ -421,7 +427,7 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 {menuItems
-                  .filter(item => ["Forms Creation", "Document Storage", "Log Pages", "Document Management"].includes(item.title))
+                  .filter(item => ["Forms Creation", "Document Storage", "Log Pages", "Technical Publications"].includes(item.title))
                   .map((item) => {
                     const isActive = pathname === item.url;
                     return (

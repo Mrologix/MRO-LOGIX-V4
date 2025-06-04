@@ -91,6 +91,15 @@ model User {
 
   // Manual Version Edits
   editedManualVersions ManualVersion[] @relation("UserEditedManualVersions")
+
+  // Technical Queries Relations
+  createdTechnicalQueries     TechnicalQuery[]         @relation("CreatedTechnicalQueries")
+  updatedTechnicalQueries     TechnicalQuery[]         @relation("UpdatedTechnicalQueries")
+  resolvedTechnicalQueries    TechnicalQuery[]         @relation("ResolvedTechnicalQueries")
+  createdTechnicalQueryResponses TechnicalQueryResponse[] @relation("CreatedTechnicalQueryResponses")
+  updatedTechnicalQueryResponses TechnicalQueryResponse[] @relation("UpdatedTechnicalQueryResponses")
+  technicalQueryVotes         TechnicalQueryVote[]     @relation("TechnicalQueryVotes")
+  technicalQueryResponseVotes TechnicalQueryResponseVote[] @relation("TechnicalQueryResponseVotes")
 }
 
 model StockInventoryAttachment {
@@ -445,5 +454,128 @@ model ManualComment {
   user      User     @relation(fields: [userId], references: [id])
 
   @@index([manualId])
+  @@index([userId])
+}
+
+// =========================
+// Technical Queries Models
+// =========================
+
+model TechnicalQuery {
+  id              String                      @id @default(uuid())
+  title           String
+  description     String
+  category        String?                     // Optional categorization (e.g., "Engine", "Avionics", "Hydraulics")
+  priority        String                      @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  status          String                      @default("OPEN")   // OPEN, IN_PROGRESS, RESOLVED, CLOSED
+  tags            String[]                    // Array of tags for better searchability
+  isResolved      Boolean                     @default(false)
+  resolvedAt      DateTime?
+  resolvedById    String?
+  hasAttachments  Boolean                     @default(false)
+  viewCount       Int                         @default(0)
+  upvotes         Int                         @default(0)
+  downvotes       Int                         @default(0)
+  createdById     String
+  updatedById     String?
+  createdAt       DateTime                    @default(now())
+  updatedAt       DateTime                    @updatedAt
+
+  // Relations
+  createdBy       User                        @relation("CreatedTechnicalQueries", fields: [createdById], references: [id], onDelete: Cascade)
+  updatedBy       User?                       @relation("UpdatedTechnicalQueries", fields: [updatedById], references: [id])
+  resolvedBy      User?                       @relation("ResolvedTechnicalQueries", fields: [resolvedById], references: [id])
+  responses       TechnicalQueryResponse[]
+  attachments     TechnicalQueryAttachment[]
+  votes           TechnicalQueryVote[]
+
+  @@index([createdById])
+  @@index([status])
+  @@index([category])
+  @@index([isResolved])
+  @@index([createdAt])
+}
+
+model TechnicalQueryResponse {
+  id                String           @id @default(uuid())
+  content           String
+  isAcceptedAnswer  Boolean          @default(false)
+  hasAttachments    Boolean          @default(false)
+  upvotes           Int              @default(0)
+  downvotes         Int              @default(0)
+  technicalQueryId  String
+  createdById       String
+  updatedById       String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  // Relations
+  technicalQuery    TechnicalQuery   @relation(fields: [technicalQueryId], references: [id], onDelete: Cascade)
+  createdBy         User             @relation("CreatedTechnicalQueryResponses", fields: [createdById], references: [id], onDelete: Cascade)
+  updatedBy         User?            @relation("UpdatedTechnicalQueryResponses", fields: [updatedById], references: [id])
+  attachments       TechnicalQueryResponseAttachment[]
+  votes             TechnicalQueryResponseVote[]
+
+  @@index([technicalQueryId])
+  @@index([createdById])
+  @@index([isAcceptedAnswer])
+  @@index([createdAt])
+}
+
+model TechnicalQueryAttachment {
+  id                String           @id @default(uuid())
+  fileName          String
+  fileKey           String
+  fileSize          Int
+  fileType          String
+  technicalQueryId  String
+  createdAt         DateTime         @default(now())
+
+  technicalQuery    TechnicalQuery   @relation(fields: [technicalQueryId], references: [id], onDelete: Cascade)
+
+  @@index([technicalQueryId])
+}
+
+model TechnicalQueryResponseAttachment {
+  id                        String                 @id @default(uuid())
+  fileName                  String
+  fileKey                   String
+  fileSize                  Int
+  fileType                  String
+  technicalQueryResponseId  String
+  createdAt                 DateTime               @default(now())
+
+  technicalQueryResponse    TechnicalQueryResponse @relation(fields: [technicalQueryResponseId], references: [id], onDelete: Cascade)
+
+  @@index([technicalQueryResponseId])
+}
+
+model TechnicalQueryVote {
+  id                String           @id @default(uuid())
+  voteType          String           // "UP" or "DOWN"
+  technicalQueryId  String
+  userId            String
+  createdAt         DateTime         @default(now())
+
+  technicalQuery    TechnicalQuery   @relation(fields: [technicalQueryId], references: [id], onDelete: Cascade)
+  user              User             @relation("TechnicalQueryVotes", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([technicalQueryId, userId])
+  @@index([technicalQueryId])
+  @@index([userId])
+}
+
+model TechnicalQueryResponseVote {
+  id                        String                 @id @default(uuid())
+  voteType                  String                 // "UP" or "DOWN"
+  technicalQueryResponseId  String
+  userId                    String
+  createdAt                 DateTime               @default(now())
+
+  technicalQueryResponse    TechnicalQueryResponse @relation(fields: [technicalQueryResponseId], references: [id], onDelete: Cascade)
+  user                      User                   @relation("TechnicalQueryResponseVotes", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([technicalQueryResponseId, userId])
+  @@index([technicalQueryResponseId])
   @@index([userId])
 }

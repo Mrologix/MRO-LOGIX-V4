@@ -1,0 +1,57 @@
+USERS TO LOGIN ON MRO-DEV
+
+r.admin@mro-logix.com
+Mro Admin
+m.admin
+ge0cg4nnt@S99N
+
+user1dev@mro-logix.com
+John User
+j.user
+ge0cg4nnt@S99N47-ra
+
+user2dev@mro-logix.com
+Carlos User
+c.user
+g33cg4nnt@S99N47-ra
+
+user3dev@mro-logix.com
+Deff User
+d.user
+g999cg4nnt@S99N47-ra
+
+user4dev@mro-logix.com
+Enif User
+e.user
+g999c48554-t@S99N47-ra
+
+user5dev@mro-logix.com
+Freddy User
+f.user
+g999c48554t@S99N47-ra
+
+user6dev@mro-logix.com
+Grench User
+g.user
+g999c48589t@S99N47-ra
+
+user7dev@mro-logix.com
+Hitner User
+h.user
+g999c48589t@S99N47-ra
+
+user8dev@mro-logix.com
+Inner User
+i.user
+g999c48589t@S99N47-rr1
+
+user9dev@mro-logix.com
+Kelnner User
+k.user
+g999c48589t@S99N47-rr15
+
+user10dev@mro-logix.com
+Lancer User
+l.user
+g666c48589t@S99N47-rr15
+
