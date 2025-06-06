@@ -7,6 +7,7 @@ import { LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   Dialog,
   DialogContent,
@@ -81,6 +82,8 @@ export default function DashboardHeader() {
             <Link href="/dashboard/ai-chat" className="text-sm font-medium hover:text-primary">
               Chat Assistant
             </Link>
+            
+            <ThemeToggle />
             
             <Dialog open={showSignOutDialog} onOpenChange={setShowSignOutDialog}>
               <DialogTrigger asChild>
@@ -174,6 +177,11 @@ export default function DashboardHeader() {
             >
               AI Chat
             </Link>
+            
+            <div className="flex items-center justify-between py-2">
+              <span className="text-sm font-medium">Theme</span>
+              <ThemeToggle />
+            </div>
             
             <Dialog open={showSignOutDialog} onOpenChange={setShowSignOutDialog}>
               <DialogTrigger asChild>

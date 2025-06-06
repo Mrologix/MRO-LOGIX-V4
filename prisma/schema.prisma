@@ -159,6 +159,28 @@ model TemperatureControl {
   updatedAt      DateTime @updatedAt
 }
 
+model TemperatureHumidityConfig {
+  id                    String   @id @default(uuid())
+  // Temperature ranges
+  tempNormalMin         Float    @default(0)
+  tempNormalMax         Float    @default(24)
+  tempMediumMin         Float    @default(25)
+  tempMediumMax         Float    @default(35)
+  tempHighMin           Float    @default(36)
+  // Humidity ranges
+  humidityNormalMin     Float    @default(0)
+  humidityNormalMax     Float    @default(35)
+  humidityMediumMin     Float    @default(36)
+  humidityMediumMax     Float    @default(65)
+  humidityHighMin       Float    @default(66)
+  // Only one configuration record should exist
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  @@unique([isActive])
+}
+
 model IncomingInspectionAttachment {
   id                    String             @id @default(uuid())
   fileName              String
@@ -578,4 +600,85 @@ model TechnicalQueryResponseVote {
   @@unique([technicalQueryResponseId, userId])
   @@index([technicalQueryResponseId])
   @@index([userId])
+}
+
+// =========================
+// SMS Reports Models
+// =========================
+
+model SMSReportAttachment {
+  id          String    @id @default(uuid())
+  fileName    String
+  fileKey     String
+  fileSize    Int
+  fileType    String
+  smsReportId String
+  createdAt   DateTime  @default(now())
+  SMSReport   SMSReport @relation(fields: [smsReportId], references: [id], onDelete: Cascade)
+
+  @@index([smsReportId])
+}
+
+model SMSReport {
+  id                String                @id @default(uuid())
+  reportNumber      String                @unique
+  reporterName      String?
+  reporterEmail     String?
+  date              DateTime
+  timeOfEvent       String?
+  reportTitle       String
+  reportDescription String
+  hasAttachments    Boolean               @default(false)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+  Attachment        SMSReportAttachment[]
+
+  @@index([reportNumber])
+  @@index([date])
+  @@index([createdAt])
+}
+
+model SDRReportAttachment {
+  id          String    @id @default(uuid())
+  fileName    String
+  fileKey     String
+  fileSize    Int
+  fileType    String
+  sdrReportId String
+  createdAt   DateTime  @default(now())
+  SDRReport   SDRReport @relation(fields: [sdrReportId], references: [id], onDelete: Cascade)
+}
+
+model SDRReport {
+  id                    String                @id @default(uuid())
+  controlNumber         String                @unique
+  reportTitle           String
+  difficultyDate        DateTime
+  submitter             String
+  submitterOther        String?
+  submitterName         String
+  email                 String
+  station               String
+  condition             String
+  conditionOther        String?
+  howDiscovered         String
+  howDiscoveredOther    String?
+  hasFlightNumber       Boolean               @default(false)
+  flightNumber          String?
+  partOrAirplane        String
+  airplaneModel         String?
+  airplaneTailNumber    String?
+  partNumber            String?
+  serialNumber          String?
+  timeOfDiscover        String?
+  hasAtaCode            Boolean               @default(false)
+  ataSystemCode         String?
+  problemDescription    String
+  symptoms              String?
+  consequences          String?
+  correctiveAction      String?
+  hasAttachments        Boolean               @default(false)
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  Attachment            SDRReportAttachment[]
 }

@@ -6,7 +6,7 @@ import { PlusCircle, ShieldAlert } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
-const SMSAuditsHeader = () => {
+const AuditsManagementHeader = () => {
   return (
     <Card className="w-full mb-6">
       <header>
@@ -16,13 +16,13 @@ const SMSAuditsHeader = () => {
               <h1 className="text-2xl font-bold">
                 <div className="flex items-center gap-2">
                   <ShieldAlert size={24} strokeWidth={1.5} className="text-[#f43f5e]" />
-                  <Badge className="px-3 py-1 text-base bg-[#f43f5e] text-white rounded-[4px] border border-black shadow-md">SMS Audits</Badge>
+                  <Badge className="px-3 py-1 text-base bg-[#f43f5e] text-white rounded-[4px] border border-black shadow-md">Audits Management</Badge>
                 </div>
               </h1>
             </div>
             <Button variant="outline" size="sm" className="flex items-center gap-2">
               <PlusCircle size={16} />
-              New SMS Audit
+              New Audit
             </Button>
           </div>
         </div>
@@ -31,4 +31,4 @@ const SMSAuditsHeader = () => {
   );
 };
 
-export default SMSAuditsHeader; 
+export default AuditsManagementHeader; 

@@ -14,6 +14,7 @@ const BUCKET_NAME = 'mro-logix-amazons3-bucket';
 const FLIGHT_RECORDS_FOLDER = 'flight-records';
 const TECHNICIAN_TRAINING_FOLDER = 'technician-training';
 const INCOMING_INSPECTION_FOLDER = 'incoming-inspections';
+const SMS_REPORTS_FOLDER = 'sms-reports';
 
 /**
  * Uploads a file to the S3 bucket in the flight records folder
@@ -529,5 +530,123 @@ export async function getAirportIdFile(fileKey: string): Promise<Buffer | null> 
       console.error('Error details:', error.message);
     }
     return null;
+  }
+}
+
+// SMS Reports file handling
+export async function uploadSMSReportFile(file: File, smsReportId: string): Promise<string> {
+  const fileName = `${smsReportId}/${Date.now()}-${file.name}`;
+  const key = `${SMS_REPORTS_FOLDER}/${fileName}`;
+  
+  try {
+    // Convert file to buffer - same approach as other upload functions
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: key,
+      Body: buffer,
+      ContentType: file.type
+    });
+    
+    await s3Client.send(command);
+    
+    return key;
+  } catch (error) {
+    console.error('Error uploading SMS report file:', error);
+    if (error instanceof Error) {
+      throw new Error(`Failed to upload SMS report file: ${error.message}`);
+    }
+    throw new Error('Failed to upload SMS report file: Unknown error');
+  }
+}
+
+export async function getSMSReportFile(fileKey: string): Promise<Buffer | null> {
+  try {
+    const response = await s3Client.send(new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileKey,
+    }));
+    
+    if (!response.Body) {
+      return null;
+    }
+    
+    // Convert the readable stream to a buffer
+    const chunks: Uint8Array[] = [];
+    const stream = response.Body as unknown as AsyncIterable<Uint8Array>;
+    for await (const chunk of stream) {
+      chunks.push(chunk);
+    }
+    return Buffer.concat(chunks);
+  } catch (error) {
+    console.error('Error getting SMS report file:', error);
+    return null;
+  }
+}
+
+export async function deleteSMSReportFile(fileKey: string): Promise<void> {
+  try {
+    await s3Client.send(new DeleteObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileKey,
+    }));
+  } catch (error) {
+    console.error('Error deleting SMS report file:', error);
+    throw new Error('Failed to delete SMS report file');
+  }
+}
+
+// SDR Reports file handling
+const SDR_REPORTS_FOLDER = 'sdr-reports';
+
+export async function uploadSDRReportFile(file: File, sdrReportId: string): Promise<string> {
+  const fileName = `${sdrReportId}/${Date.now()}-${file.name}`;
+  const key = `${SDR_REPORTS_FOLDER}/${fileName}`;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+
+  const command = new PutObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: key,
+    Body: buffer,
+    ContentType: file.type
+  });
+
+  await s3Client.send(command);
+
+  return key;
+}
+
+export async function getSDRReportFile(fileKey: string): Promise<Buffer | null> {
+  try {
+    const response = await s3Client.send(new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileKey,
+    }));
+
+    if (!response.Body) {
+      return null;
+    }
+
+    const arrayBuffer = await response.Body.transformToByteArray();
+    return Buffer.from(arrayBuffer);
+  } catch (error) {
+    console.error('Error getting SDR report file:', error);
+    return null;
+  }
+}
+
+export async function deleteSDRReportFile(fileKey: string): Promise<void> {
+  try {
+    await s3Client.send(new DeleteObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: fileKey,
+    }));
+  } catch (error) {
+    console.error('Error deleting SDR report file:', error);
+    throw new Error('Failed to delete SDR report file');
   }
 }

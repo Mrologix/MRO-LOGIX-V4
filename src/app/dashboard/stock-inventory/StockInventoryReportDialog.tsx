@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -25,6 +26,24 @@ interface StockInventoryReportDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+// Define column options and their default states
+const COLUMN_OPTIONS = [
+  { key: 'incomingDate', label: 'Incoming Date', required: true },
+  { key: 'station', label: 'Station', required: false },
+  { key: 'owner', label: 'Owner', required: false },
+  { key: 'description', label: 'Description', required: true },
+  { key: 'partNo', label: 'Part No', required: true },
+  { key: 'serialNo', label: 'Serial No', required: true },
+  { key: 'quantity', label: 'Quantity', required: false },
+  { key: 'type', label: 'Type', required: false },
+  { key: 'location', label: 'Location', required: false },
+  { key: 'expireDate', label: 'Expire Date', required: true },
+  { key: 'inspectionResult', label: 'Inspection Result', required: false },
+  { key: 'inspectionFailure', label: 'Inspection Failure', required: false },
+  { key: 'comments', label: 'Comments', required: false },
+  { key: 'attachments', label: 'Attachments', required: false },
+];
+
 export function StockInventoryReportDialog({
   open,
   onOpenChange,
@@ -32,10 +51,25 @@ export function StockInventoryReportDialog({
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [owner, setOwner] = useState<string>("");
+  const [selectedColumns, setSelectedColumns] = useState<Record<string, boolean>>(() => {
+    // Initialize with all required columns selected by default, others unselected
+    const initial: Record<string, boolean> = {};
+    COLUMN_OPTIONS.forEach(column => {
+      initial[column.key] = column.required;
+    });
+    return initial;
+  });
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
   const ownerOptions = ['Airline-1', 'Airline-2', 'Airline-3', 'Airline-4', 'Airline-5', 'Airline-6', 'Airline-7', 'Airline-8', 'Airline-9', 'Airline-10', 'All'];
+
+  const handleColumnToggle = (columnKey: string, checked: boolean) => {
+    setSelectedColumns(prev => ({
+      ...prev,
+      [columnKey]: checked
+    }));
+  };
 
   const handleGenerateReport = async () => {
     if (!startDate || !endDate) {
@@ -58,6 +92,7 @@ export function StockInventoryReportDialog({
           startDate,
           endDate,
           owner: owner === 'All' ? null : owner,
+          selectedColumns,
         }),
       });
 
@@ -94,7 +129,7 @@ export function StockInventoryReportDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Generate Stock Inventory Report</DialogTitle>
         </DialogHeader>
@@ -129,6 +164,33 @@ export function StockInventoryReportDialog({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+          
+          {/* Column Selection Section */}
+          <div className="grid gap-3">
+            <Label className="text-base font-semibold">Select Columns to Include</Label>
+            <div className="grid grid-cols-2 gap-3 max-h-48 overflow-y-auto p-2 border rounded-lg">
+              {COLUMN_OPTIONS.map((column) => (
+                <div key={column.key} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={column.key}
+                    checked={selectedColumns[column.key]}
+                    onCheckedChange={(checked) => handleColumnToggle(column.key, checked as boolean)}
+                    disabled={column.required}
+                  />
+                  <Label 
+                    htmlFor={column.key} 
+                    className={`text-sm ${column.required ? 'font-medium text-gray-600' : 'text-gray-800'}`}
+                  >
+                    {column.label}
+                    {column.required && <span className="text-xs text-gray-500 ml-1">(Required)</span>}
+                  </Label>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500">
+              * Required columns are always included and cannot be unchecked
+            </p>
           </div>
         </div>
         <div className="flex justify-end space-x-2">

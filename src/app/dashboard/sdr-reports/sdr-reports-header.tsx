@@ -6,12 +6,16 @@ import { PlusCircle, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 
-const SDRReportsHeader = () => {
+interface SDRReportsHeaderProps {
+  onNewSDR: () => void;
+}
+
+const SDRReportsHeader: React.FC<SDRReportsHeaderProps> = ({ onNewSDR }) => {
   return (
     <Card className="w-full mb-6">
       <header>
         <div className="w-full max-w-full mx-auto px-4">
-          <div className="flex h-16 items-center justify-between w-full">
+          <div className="flex h-12 items-center justify-between w-full">
             <div>
               <h1 className="text-2xl font-bold">
                 <div className="flex items-center gap-2">
@@ -20,7 +24,7 @@ const SDRReportsHeader = () => {
                 </div>
               </h1>
             </div>
-            <Button variant="outline" size="sm" className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="flex items-center gap-2 cursor-pointer" onClick={onNewSDR}>
               <PlusCircle size={16} />
               New SDR
             </Button>

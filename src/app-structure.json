@@ -1,9 +1,221 @@
 {
-  "version": "1.1.0",
-  "lastUpdated": "2025-05-14T12:00:00Z",
+  "version": "1.2.0",
+  "lastUpdated": "2025-01-27T12:00:00Z",
 
   "assistant": {
-    "systemPrompt": "You are the MRO Logix in-app assistant. For the first message in a chat session, start with: 'Welcome, {firstName} {lastName}!' followed by a brief, friendly greeting. Then, for the rest of the session, answer questions about the web app strictly from the JSON below. When referring to a page, always return the page name as a markdown link using its 'path'. If you cannot find the answer, say you don't know."
+    "systemPrompt": "You are the MRO Logix in-app assistant designed to provide accurate and friendly support about the web application using only the given JSON data.\n\n**Session Start:** For the first message in a chat session, greet the user with:\n\n\"Welcome, {firstName} {lastName}!\" followed by a brief, friendly greeting.\n\n**During the session:**\n- Answer all questions strictly based on the provided JSON data.\n- When mentioning any page, always return the page name formatted as a markdown link where the link uses the page's 'path' property from the JSON.\n- If the answer is not found in the JSON, respond with \"I don't know.\"\n\n**Important:**\n- Do not provide any information outside the JSON data.\n- Maintain a friendly and helpful tone.\n\n# Output Format\n\nProvide plain text responses that incorporate markdown links for pages as described. Begin the session with the personalized greeting, then respond to queries accordingly.\n\n# Example\n\nUser first message:\n\n- Your response: \"Welcome, Jane Doe! How can I assist you today?\"\n\nUser asks about a page:\n\n- Your response: \"You can find that information on the [Dashboard](/dashboard) page.\": where [Dashboard] is the page name and '/dashboard' is its path from JSON.\n\nIf unknown:\n\n- \"I don't know how to help you with that requirement.\"",
+    
+    "comprehensiveInstructions": {
+      "applicationGuidance": {
+        "navigationRules": [
+          "When referring to pages or sections of the application, format them as markdown links: [Page Name](/path/to/page).",
+          "Always use the exact path from the 'path' field when creating links.",
+          "If a path contains a placeholder like ':id' (e.g., '/dashboard/flight-records/:id'), and you have a specific ID, replace the placeholder with the actual ID.",
+          "Do not mention underlying file paths or filenames in your responses.",
+          "Respond in a clear, concise manner, avoiding unnecessary technical jargon unless specifically requested.",
+          "Use bullet points for listing multiple options or instructions."
+        ]
+      },
+      
+      "toolInstructions": {
+        "overview": "You have access to extensive tools that let you query real data from all major modules in the aviation maintenance system. Always call these tools whenever the user requests related information.",
+        
+        "categories": [
+          {
+            "name": "FLIGHT RECORDS",
+            "description": "Comprehensive aviation maintenance logbook system",
+            "functions": [
+              {
+                "name": "get_flight_record_by_id",
+                "params": ["id"],
+                "description": "fetch full details for a flight record"
+              },
+              {
+                "name": "list_attachments_for_record",
+                "params": ["id"],
+                "description": "fetch attachment metadata and URLs for a flight record"
+              },
+              {
+                "name": "list_recent_flight_records",
+                "params": ["limit"],
+                "description": "fetch the most recent flight records"
+              },
+              {
+                "name": "search_flight_records_by_tail",
+                "params": ["tail", "limit"],
+                "description": "find flight records by tail number"
+              },
+              {
+                "name": "search_flight_records",
+                "params": ["filters"],
+                "description": "comprehensive search by airline, fleet, tail, defects, dates, etc."
+              }
+            ]
+          },
+          {
+            "name": "STOCK INVENTORY",
+            "description": "Parts and materials inventory tracking system",
+            "functions": [
+              {
+                "name": "search_stock_inventory",
+                "params": ["filters"],
+                "description": "search inventory by part number, serial, station, owner, expiration, etc."
+              },
+              {
+                "name": "get_stock_inventory_by_id",
+                "params": ["id"],
+                "description": "fetch detailed inventory item information"
+              },
+              {
+                "name": "list_recent_stock_inventory",
+                "params": ["limit"],
+                "description": "fetch recent inventory additions"
+              }
+            ]
+          },
+          {
+            "name": "TEMPERATURE CONTROL",
+            "description": "Environmental monitoring system",
+            "functions": [
+              {
+                "name": "search_temperature_control",
+                "params": ["filters"],
+                "description": "search temperature records by location, date, ranges, employee"
+              },
+              {
+                "name": "list_recent_temperature_control",
+                "params": ["limit"],
+                "description": "fetch recent temperature measurements"
+              }
+            ]
+          },
+          {
+            "name": "TECHNICIAN TRAINING",
+            "description": "Training management and certification tracking",
+            "functions": [
+              {
+                "name": "search_technician_training",
+                "params": ["filters"],
+                "description": "search training records by technician, organization, type, dates"
+              },
+              {
+                "name": "get_technician_training_by_id",
+                "params": ["id"],
+                "description": "fetch detailed training record"
+              }
+            ]
+          },
+          {
+            "name": "SMS REPORTS",
+            "description": "Safety Management System reporting",
+            "functions": [
+              {
+                "name": "search_sms_reports",
+                "params": ["filters"],
+                "description": "search SMS reports by type, priority, status, submitter, dates"
+              }
+            ]
+          },
+          {
+            "name": "SDR REPORTS",
+            "description": "Service Difficulty Reports for FAA compliance",
+            "functions": [
+              {
+                "name": "search_sdr_reports",
+                "params": ["filters"],
+                "description": "search SDR reports by control number, aircraft, parts, problems"
+              },
+              {
+                "name": "get_sdr_report_by_id",
+                "params": ["id"],
+                "description": "fetch detailed SDR report"
+              }
+            ]
+          },
+          {
+            "name": "TECHNICAL QUERIES",
+            "description": "Knowledge management and collaborative problem-solving",
+            "functions": [
+              {
+                "name": "search_technical_queries",
+                "params": ["filters"],
+                "description": "search technical Q&A by title, category, status, resolution"
+              },
+              {
+                "name": "get_technical_query_by_id",
+                "params": ["id"],
+                "description": "fetch detailed technical query with responses"
+              }
+            ]
+          },
+          {
+            "name": "INCOMING INSPECTIONS",
+            "description": "Quality control for incoming parts",
+            "functions": [
+              {
+                "name": "search_incoming_inspections",
+                "params": ["filters"],
+                "description": "search inspection records by inspector, parts, results"
+              },
+              {
+                "name": "get_incoming_inspection_by_id",
+                "params": ["id"],
+                "description": "fetch detailed inspection record"
+              }
+            ]
+          },
+          {
+            "name": "AIRPORT ID MANAGEMENT",
+            "description": "Security credential and badge management",
+            "functions": [
+              {
+                "name": "search_airport_id",
+                "params": ["filters"],
+                "description": "search airport badges by employee, station, expiration status"
+              }
+            ]
+          },
+          {
+            "name": "USER ACTIVITY",
+            "description": "System audit trail and usage tracking",
+            "functions": [
+              {
+                "name": "search_user_activity",
+                "params": ["filters"],
+                "description": "search system activity logs by user, action, resource type"
+              }
+            ]
+          },
+          {
+            "name": "DASHBOARD STATISTICS",
+            "description": "Real-time analytics and system metrics",
+            "functions": [
+              {
+                "name": "get_dashboard_statistics",
+                "params": ["modules"],
+                "description": "get counts and statistics for specified modules"
+              }
+            ]
+          }
+        ],
+        
+        "usageGuideline": "Always use these tools when users ask about any aviation maintenance data. Don't answer from memory when real data is available through these functions."
+      },
+      
+      "userContext": {
+        "personalisation": "Use current user information (ID, full name, username, email, account creation date) when relevant to personalise responses.",
+        "sessionHandling": "For the first message in a chat session, start with the personalized greeting. For subsequent messages, provide helpful and contextual responses."
+      },
+      
+      "responseGuidelines": [
+        "Maintain a friendly and helpful tone throughout all interactions",
+        "Provide accurate information based on real data from the system",
+        "Use markdown formatting for links and structure when appropriate",
+        "Be concise but comprehensive in your responses",
+        "Always reference the appropriate page links when directing users to specific functionality",
+        "If you cannot find specific information, clearly state that you don't know rather than guessing"
+      ]
+    }
   },
 
   "app": {
@@ -48,6 +260,24 @@
           ]
         },
         {
+          "name": "AI Chat",
+          "path": "/dashboard/ai-chat",
+          "file": "dashboard/ai-chat/page.tsx",
+          "description": "Intelligent AI assistant with comprehensive access to all MRO Logix data and functionality. Can search, analyze, and provide insights across all system modules.",
+          "keywords": ["ai", "chat", "assistant", "help", "search", "analysis"],
+          "aliases": ["ai assistant", "chat bot", "help"],
+          "breadcrumbs": ["Dashboard", "AI Chat"],
+          "features": [
+            "Natural language queries across all modules",
+            "Real-time data access and analysis",
+            "Personalized responses with user context",
+            "Interactive markdown links to relevant pages",
+            "Comprehensive search across flight records, inventory, training, reports",
+            "Statistical insights and trend analysis",
+            "Intelligent navigation assistance"
+          ]
+        },
+        {
           "name": "Aircraft Parts Cycle",
           "path": "/dashboard/aircraft-parts-cycle",
           "file": "dashboard/aircraft-parts-cycle/page.tsx",
@@ -85,7 +315,6 @@
             "Historical data comparison"
           ]
         },
-
         {
           "name": "Data Analytics",
           "path": "/dashboard/data-analytics",
@@ -158,8 +387,369 @@
             "Edit the flight record (if permissions allow)",
             "Delete the flight record (if permissions allow)"
           ]
+        },
+        {
+          "name": "Airport ID",
+          "path": "/dashboard/airport-id",
+          "file": "dashboard/airport-id/page.tsx",
+          "description": "Airport ID badge management system for tracking employee airport access credentials, expiration dates, and compliance status.",
+          "keywords": ["airport id", "badges", "security", "employee access", "expiration", "compliance"],
+          "aliases": ["airport badges", "id management", "security badges", "access cards"],
+          "breadcrumbs": ["Dashboard", "Airport ID"],
+          "features": [
+            "Track employee airport ID badges",
+            "Monitor badge expiration dates",
+            "Search and filter badge records",
+            "Create new badge records",
+            "Upload badge-related attachments",
+            "View expiration status indicators",
+            "Manage badge comments and notes",
+            "Export badge records",
+            "Delete expired or invalid badges"
+          ]
         }
       ]
+    },
+
+    "modules": {
+      "flightRecords": {
+        "name": "Flight Records Management",
+        "description": "Comprehensive aviation maintenance logbook system for tracking aircraft maintenance events, defects, and rectifications.",
+        "capabilities": [
+          "Search by tail number, airline, fleet, station, service type",
+          "Filter by defect status, date ranges, attachments presence",
+          "Track block times, out times, and flight operations",
+          "Manage discrepancy and rectification notes",
+          "Store technician information and log page numbers",
+          "Handle ATA system affected codes",
+          "Support file attachments for documentation",
+          "Advanced search with multiple filter combinations"
+        ],
+        "searchableFields": [
+          "airline", "fleet", "tail", "station", "service", "systemAffected",
+          "flightNumber", "logPageNo", "discrepancyNote", "rectificationNote",
+          "technician", "hasDefect", "hasTime", "blockTime", "outTime",
+          "hasAttachments", "createdAt", "updatedAt", "date"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "date": "Flight/maintenance date",
+          "airline": "Airline code or name",
+          "fleet": "Aircraft fleet type (e.g., A-320, B-737)",
+          "flightNumber": "Flight number",
+          "station": "Airport station code",
+          "service": "Service type (Transit, Over-Night, etc.)",
+          "tail": "Aircraft tail/registration number",
+          "hasDefect": "Boolean indicating defect presence",
+          "systemAffected": "ATA system code affected",
+          "logPageNo": "AMM/tech log page number",
+          "hasTime": "Boolean for time recording",
+          "blockTime": "Block time in HH:MM format",
+          "outTime": "Out time in HH:MM format",
+          "discrepancyNote": "Defect description",
+          "rectificationNote": "Corrective action taken",
+          "technician": "Technician name",
+          "hasAttachments": "Boolean for attachment presence",
+          "attachments": "File attachments with metadata"
+        }
+      },
+      "stockInventory": {
+        "name": "Stock Inventory Management",
+        "description": "Comprehensive parts and materials inventory tracking system with expiration monitoring and inspection records.",
+        "capabilities": [
+          "Track part numbers, serial numbers, and descriptions",
+          "Monitor expiration dates and alert on expired items",
+          "Manage storage locations and ownership",
+          "Record inspection results and compliance status",
+          "Track incoming dates and quantities",
+          "Associate with technician records",
+          "Support multiple inventory types",
+          "Generate inventory reports and statistics"
+        ],
+        "searchableFields": [
+          "partNo", "serialNo", "description", "station", "owner", "type",
+          "location", "hasExpired", "hasInspection", "inspectionResult",
+          "technician", "dateFrom", "dateTo", "quantity", "expireDate"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "incomingDate": "Date item entered inventory",
+          "station": "Storage station/location",
+          "owner": "Item owner organization",
+          "description": "Item description",
+          "partNo": "Part number",
+          "serialNo": "Serial number",
+          "quantity": "Item quantity",
+          "hasExpireDate": "Boolean for expiration tracking",
+          "expireDate": "Expiration date",
+          "type": "Inventory item type",
+          "location": "Specific storage location",
+          "hasInspection": "Boolean for inspection requirement",
+          "inspectionResult": "Inspection outcome (Passed/Failed)",
+          "technician": "Associated technician",
+          "hasAttachments": "Boolean for attachment presence"
+        }
+      },
+      "temperatureControl": {
+        "name": "Temperature Control Monitoring",
+        "description": "Environmental monitoring system for tracking temperature and humidity in critical storage areas.",
+        "capabilities": [
+          "Record temperature and humidity measurements",
+          "Track measurement locations and dates",
+          "Monitor employee who recorded data",
+          "Set temperature and humidity thresholds",
+          "Generate environmental compliance reports",
+          "Search by date ranges and locations",
+          "Alert on out-of-range conditions"
+        ],
+        "searchableFields": [
+          "location", "employeeName", "dateFrom", "dateTo",
+          "tempMin", "tempMax", "humidityMin", "humidityMax"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "date": "Measurement date",
+          "location": "Measurement location",
+          "temperature": "Temperature reading",
+          "humidity": "Humidity reading",
+          "employeeName": "Employee who recorded measurement"
+        }
+      },
+      "technicianTraining": {
+        "name": "Technician Training Records",
+        "description": "Comprehensive training management system for tracking technician certifications, courses, and competencies.",
+        "capabilities": [
+          "Track training by technician name and organization",
+          "Record training types and descriptions",
+          "Monitor engine-specific training",
+          "Track training hours and completion dates",
+          "Maintain certification records",
+          "Generate training compliance reports",
+          "Search by multiple criteria"
+        ],
+        "searchableFields": [
+          "technician", "organization", "type", "training", "engineType",
+          "hasEngine", "hasHours", "dateFrom", "dateTo"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "date": "Training date",
+          "technician": "Technician name",
+          "organization": "Training organization",
+          "type": "Training type",
+          "training": "Training description",
+          "engineType": "Engine type (if applicable)",
+          "hasEngine": "Boolean for engine-related training",
+          "hasHours": "Boolean for hour tracking",
+          "hours": "Training hours completed"
+        }
+      },
+      "smsReports": {
+        "name": "Safety Management System Reports",
+        "description": "Safety reporting system for tracking incidents, hazards, and safety-related events in aviation maintenance operations.",
+        "capabilities": [
+          "Create and manage safety reports",
+          "Track report types and priorities",
+          "Monitor report status and resolution",
+          "Record submitter information",
+          "Search by date ranges and criteria",
+          "Generate safety analytics",
+          "Maintain compliance records"
+        ],
+        "searchableFields": [
+          "reportType", "priority", "status", "submitter",
+          "dateFrom", "dateTo", "description"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "reportType": "Type of safety report",
+          "priority": "Priority level",
+          "status": "Report status",
+          "submitter": "Person who submitted report",
+          "title": "Report title",
+          "description": "Report description",
+          "createdAt": "Report creation date"
+        }
+      },
+      "sdrReports": {
+        "name": "Service Difficulty Reports",
+        "description": "Federal Aviation Administration (FAA) required reporting system for significant maintenance issues and part failures.",
+        "capabilities": [
+          "Generate FAA-compliant SDR reports",
+          "Track control numbers and submitters",
+          "Record aircraft and part details",
+          "Document problem descriptions",
+          "Monitor ATA system codes",
+          "Track resolution status",
+          "Generate regulatory compliance reports"
+        ],
+        "searchableFields": [
+          "controlNumber", "reportTitle", "submitter", "submitterName",
+          "station", "condition", "flightNumber", "airplaneModel",
+          "airplaneTailNumber", "partNumber", "serialNumber",
+          "ataSystemCode", "problemDescription", "dateFrom", "dateTo"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "controlNumber": "SDR control number",
+          "reportTitle": "Report title",
+          "submitter": "Submitter username",
+          "submitterName": "Submitter full name",
+          "station": "Reporting station",
+          "condition": "Condition description",
+          "difficultyDate": "Date of difficulty",
+          "flightNumber": "Associated flight number",
+          "airplaneModel": "Aircraft model",
+          "airplaneTailNumber": "Aircraft tail number",
+          "partNumber": "Failed part number",
+          "serialNumber": "Failed part serial number",
+          "ataSystemCode": "ATA system code",
+          "problemDescription": "Detailed problem description"
+        }
+      },
+      "technicalQueries": {
+        "name": "Technical Query Management",
+        "description": "Knowledge management system for technical questions, solutions, and collaborative problem-solving in aviation maintenance.",
+        "capabilities": [
+          "Submit and track technical questions",
+          "Categorize queries by system/component",
+          "Set priority levels and status tracking",
+          "Enable collaborative responses",
+          "Tag queries for easy discovery",
+          "Track resolution status",
+          "Build knowledge base of solutions"
+        ],
+        "searchableFields": [
+          "title", "description", "category", "priority", "status",
+          "tags", "isResolved", "createdBy", "dateFrom", "dateTo"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "title": "Query title",
+          "description": "Query description",
+          "category": "Category (Engine, Avionics, Hydraulics, etc.)",
+          "priority": "Priority level (LOW, MEDIUM, HIGH, URGENT)",
+          "status": "Status (OPEN, IN_PROGRESS, RESOLVED, CLOSED)",
+          "tags": "Associated tags",
+          "isResolved": "Boolean resolution status",
+          "createdBy": "Query creator",
+          "responses": "Responses and solutions",
+          "votes": "Community votes",
+          "attachments": "Supporting documents"
+        }
+      },
+      "incomingInspections": {
+        "name": "Incoming Parts Inspection",
+        "description": "Quality control system for inspecting incoming parts and materials before they enter inventory.",
+        "capabilities": [
+          "Record inspection results",
+          "Track inspector information",
+          "Verify product match and specifications",
+          "Assess physical condition",
+          "Generate inspection reports",
+          "Link to inventory records",
+          "Maintain compliance documentation"
+        ],
+        "searchableFields": [
+          "inspector", "partNo", "serialNo", "description",
+          "productMatch", "productSpecs", "physicalCondition",
+          "dateFrom", "dateTo"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "inspectionDate": "Date of inspection",
+          "inspector": "Inspector name",
+          "partNo": "Part number inspected",
+          "serialNo": "Serial number inspected",
+          "description": "Part description",
+          "productMatch": "Product match result (YES/NO/N/A)",
+          "productSpecs": "Specifications check (YES/NO/N/A)",
+          "physicalCondition": "Physical condition (YES/NO/N/A)",
+          "stockInventory": "Linked inventory record"
+        }
+      },
+      "airportID": {
+        "name": "Airport ID Badge Management",
+        "description": "Security credential management system for tracking employee airport access badges and compliance.",
+        "capabilities": [
+          "Track employee badge information",
+          "Monitor expiration dates",
+          "Generate expiration alerts",
+          "Manage badge issuance records",
+          "Search by employee or station",
+          "Maintain compliance documentation",
+          "Generate badge reports"
+        ],
+        "searchableFields": [
+          "employeeName", "station", "badgeIdNumber", "isExpired",
+          "expiringWithinDays", "dateFrom", "dateTo"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "employeeName": "Employee name",
+          "station": "Airport station",
+          "badgeIdNumber": "Badge ID number",
+          "idIssuedDate": "Date badge was issued",
+          "expireDate": "Badge expiration date",
+          "comments": "Additional notes",
+          "attachments": "Supporting documents"
+        }
+      },
+      "userActivity": {
+        "name": "User Activity Logging",
+        "description": "System audit trail for tracking user actions and system usage across all modules.",
+        "capabilities": [
+          "Track user login/logout events",
+          "Monitor data creation/modification",
+          "Log resource access patterns",
+          "Generate usage reports",
+          "Audit trail for compliance",
+          "Security monitoring",
+          "Performance analytics"
+        ],
+        "searchableFields": [
+          "action", "resourceType", "userId", "dateFrom", "dateTo"
+        ],
+        "dataStructure": {
+          "id": "Unique identifier",
+          "userId": "User who performed action",
+          "action": "Action type (LOGIN, LOGOUT, ADDED_FLIGHT_RECORD, etc.)",
+          "resourceType": "Resource affected (FLIGHT_RECORD, STOCK_INVENTORY, etc.)",
+          "resourceId": "Specific resource ID",
+          "createdAt": "Timestamp of action",
+          "user": "User details (name, username)"
+        }
+      },
+      "dashboardStatistics": {
+        "name": "Dashboard Analytics",
+        "description": "Real-time statistics and metrics across all system modules for operational insights.",
+        "capabilities": [
+          "Real-time count statistics",
+          "Module-specific metrics",
+          "Trend analysis",
+          "Performance indicators",
+          "Compliance monitoring",
+          "Operational dashboards",
+          "Executive reporting"
+        ],
+        "availableModules": [
+          "flight_records", "stock_inventory", "temperature_control",
+          "technician_training", "sms_reports", "sdr_reports",
+          "technical_queries", "incoming_inspections", "airport_id", "user_activity"
+        ],
+        "metrics": {
+          "flight_records": ["total", "withDefects", "withAttachments", "recentCount"],
+          "stock_inventory": ["total", "withInspection", "expired"],
+          "temperature_control": ["total", "recentCount"],
+          "technician_training": ["total", "withEngine", "withHours"],
+          "sms_reports": ["total", "recentCount"],
+          "sdr_reports": ["total", "recentCount"],
+          "technical_queries": ["total", "resolved", "open"],
+          "incoming_inspections": ["total", "recentCount"],
+          "airport_id": ["total", "expired", "expiringSoon"],
+          "user_activity": ["total", "recentCount"]
+        }
+      }
     },
 
     "api": {
@@ -168,8 +758,25 @@
         {
           "path": "/api/ai-chat",
           "file": "api/ai-chat/route.ts",
-          "description": "Handles all OpenAI chat completions.",
-          "method": "POST"
+          "description": "Comprehensive AI assistant with access to all MRO Logix data through OpenAI function calling.",
+          "method": "POST",
+          "capabilities": [
+            "Natural language processing",
+            "Real-time data access across all modules",
+            "Intelligent search and filtering",
+            "Statistical analysis and reporting",
+            "Personalized user interactions",
+            "Contextual navigation assistance"
+          ],
+          "availableFunctions": [
+            "get_flight_record_by_id", "list_attachments_for_record", "list_recent_flight_records",
+            "search_flight_records_by_tail", "search_flight_records", "search_stock_inventory",
+            "get_stock_inventory_by_id", "list_recent_stock_inventory", "search_temperature_control",
+            "list_recent_temperature_control", "search_technician_training", "get_technician_training_by_id",
+            "search_sms_reports", "search_sdr_reports", "get_sdr_report_by_id", "search_technical_queries",
+            "get_technical_query_by_id", "search_incoming_inspections", "get_incoming_inspection_by_id",
+            "search_airport_id", "search_user_activity", "get_dashboard_statistics"
+          ]
         },
         {
           "path": "/api/auth/check",

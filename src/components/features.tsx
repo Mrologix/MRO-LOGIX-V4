@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Plane, PackageOpen, FileCog, CalendarCheck2, Clock3, Search, BarChart3, GraduationCap, Users, ShieldAlert, FileSpreadsheet, TriangleAlert, Handshake, ChartNoAxesCombined, FileText, DatabaseBackup, Clipboard } from "lucide-react";
+import { Plane, PackageOpen, FileCog, CalendarCheck2, Clock3, BarChart3, GraduationCap, Users, ShieldAlert, FileSpreadsheet, TriangleAlert, Handshake, ChartNoAxesCombined, FileText, DatabaseBackup, Clipboard } from "lucide-react";
 
 export const Features = () => (
   <div className="w-full pt-12 pb-20 lg:pt-12 lg:pb-40">
@@ -86,20 +86,11 @@ export const Features = () => (
           </div>
           <div className="flex flex-col gap-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg rounded-md p-4 border border-slate-200 hover:border-indigo-300 hover:bg-background">
             <div className="bg-muted rounded-md aspect-video mb-2 flex items-center justify-center">
-              <Search className="w-20 h-20 text-indigo-600" strokeWidth={0.5} />
-            </div>
-            <h3 className="text-xl tracking-tight">Internal Audits</h3>
-            <p className="text-muted-foreground text-base">
-              Facilitate internal audits to ensure regulatory compliance
-            </p>
-          </div>
-          <div className="flex flex-col gap-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg rounded-md p-4 border border-slate-200 hover:border-indigo-300 hover:bg-background">
-            <div className="bg-muted rounded-md aspect-video mb-2 flex items-center justify-center">
               <ShieldAlert className="w-20 h-20 text-indigo-600" strokeWidth={0.5} />
             </div>
-            <h3 className="text-xl tracking-tight">SMS Audits</h3>
+            <h3 className="text-xl tracking-tight">Audits Management</h3>
             <p className="text-muted-foreground text-base">
-              Conduct comprehensive SMS audits to maintain safety compliance
+              Comprehensive audit management system for internal, external, and safety audits
             </p>
           </div>
           <div className="flex flex-col gap-2 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg rounded-md p-4 border border-slate-200 hover:border-indigo-300 hover:bg-background">

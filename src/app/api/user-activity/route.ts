@@ -34,22 +34,21 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '20');
     const action = searchParams.get('action') || '';
     const resourceType = searchParams.get('resourceType') || '';
-    const userId = searchParams.get('userId') || '';
 
-    // Build where clause for filtering
+    // Build where clause for filtering - SECURITY: Always filter by current user ID
     const where: {
+      userId: string;
       action?: { contains: string; mode: 'insensitive' };
       resourceType?: string;
-      userId?: string;
-    } = {};
+    } = {
+      userId: currentUser.id // SECURITY FIX: Always restrict to current user's activities only
+    };
+    
     if (action) {
       where.action = { contains: action, mode: 'insensitive' };
     }
     if (resourceType) {
       where.resourceType = resourceType;
-    }
-    if (userId) {
-      where.userId = userId;
     }
 
     // Get total count

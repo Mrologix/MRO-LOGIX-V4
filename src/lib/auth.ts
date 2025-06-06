@@ -22,7 +22,7 @@ export async function getServerSession() {
   try {
     console.log('Getting server session...');
     const cookieStore = await cookies();
-    const token = cookieStore.get('auth_token')?.value;
+    const token = cookieStore.get('token')?.value;
     console.log('Auth token found:', token ? 'Yes' : 'No');
     console.log('JWT_SECRET:', process.env.JWT_SECRET);
     

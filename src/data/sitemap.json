@@ -116,15 +116,7 @@
     "description": "View and manage project schedules in Gantt chart format",
     "keywords": ["gantt", "schedule", "timeline", "projects"]
   },
-  {
-    "id": "internal-audits",
-    "name": "Internal Audits",
-    "type": "page",
-    "path": "/dashboard/internal-audits",
-    "filePath": "src/app/dashboard/internal-audits/page.tsx",
-    "description": "Conduct and manage internal audits",
-    "keywords": ["audits", "internal", "compliance", "review"]
-  },
+
   {
     "id": "log-pages",
     "name": "Log Pages",
@@ -153,13 +145,13 @@
     "keywords": ["sdr", "reports", "service", "difficulty"]
   },
   {
-    "id": "sms-audits",
-    "name": "SMS Audits",
+    "id": "audits-management",
+    "name": "Audits Management",
     "type": "page",
-    "path": "/dashboard/sms-audits",
-    "filePath": "src/app/dashboard/sms-audits/page.tsx",
-    "description": "Safety Management System audits",
-    "keywords": ["sms", "audits", "safety", "management"]
+    "path": "/dashboard/audits-management",
+    "filePath": "src/app/dashboard/audits-management/page.tsx",
+    "description": "Comprehensive audit management system for internal, external, and safety audits",
+    "keywords": ["audits", "management", "internal", "external", "safety", "compliance"]
   },
   {
     "id": "sms-reports",

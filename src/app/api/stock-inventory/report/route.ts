@@ -4,14 +4,106 @@ import * as XLSX from 'xlsx';
 import { format } from 'date-fns';
 import { Prisma } from '@prisma/client';
 
+// Define column mapping from frontend keys to Excel headers and data extraction
+const COLUMN_MAPPING = {
+  incomingDate: {
+    header: 'Incoming Date',
+    extract: (record: any) => format(new Date(record.incomingDate), 'MMM dd, yyyy'),
+    width: 12
+  },
+  station: {
+    header: 'Station',
+    extract: (record: any) => record.station,
+    width: 10
+  },
+  owner: {
+    header: 'Owner',
+    extract: (record: any) => record.owner,
+    width: 12
+  },
+  description: {
+    header: 'Description',
+    extract: (record: any) => record.description,
+    width: 30
+  },
+  partNo: {
+    header: 'Part No',
+    extract: (record: any) => record.partNo,
+    width: 15
+  },
+  serialNo: {
+    header: 'Serial No',
+    extract: (record: any) => record.serialNo,
+    width: 15
+  },
+  quantity: {
+    header: 'Quantity',
+    extract: (record: any) => record.quantity,
+    width: 10
+  },
+  type: {
+    header: 'Type',
+    extract: (record: any) => record.type,
+    width: 12
+  },
+  location: {
+    header: 'Location',
+    extract: (record: any) => record.location,
+    width: 12
+  },
+  expireDate: {
+    header: 'Expire Date',
+    extract: (record: any) => record.hasExpireDate && record.expireDate 
+      ? format(new Date(record.expireDate), 'MMM dd, yyyy')
+      : 'N/A',
+    width: 12
+  },
+  inspectionResult: {
+    header: 'Inspection Result',
+    extract: (record: any) => record.hasInspection 
+      ? record.inspectionResult 
+      : 'N/A',
+    width: 15
+  },
+  inspectionFailure: {
+    header: 'Inspection Failure',
+    extract: (record: any) => record.hasInspection && record.inspectionResult === 'Failed'
+      ? (record.inspectionFailure === 'Other' ? record.customFailure : record.inspectionFailure)
+      : 'N/A',
+    width: 20
+  },
+  comments: {
+    header: 'Comments',
+    extract: (record: any) => record.hasComment && record.comment 
+      ? record.comment 
+      : 'N/A',
+    width: 30
+  },
+  attachments: {
+    header: 'Attachments',
+    extract: (record: any) => record.hasAttachments && record.Attachment.length > 0
+      ? record.Attachment.map((a: any) => a.fileName).join(', ')
+      : 'N/A',
+    width: 30
+  }
+};
+
 export async function POST(request: Request) {
   try {
-    const { startDate, endDate, owner } = await request.json();
+    const { startDate, endDate, owner, selectedColumns } = await request.json();
 
     // Validate dates
     if (!startDate || !endDate) {
       return NextResponse.json(
         { success: false, message: 'Start date and end date are required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate selectedColumns
+    if (!selectedColumns || typeof selectedColumns !== 'object') {
+      return NextResponse.json(
+        { success: false, message: 'Selected columns are required' },
         { status: 400 }
       );
     }
@@ -40,75 +132,32 @@ export async function POST(request: Request) {
       },
     });
 
-    // Prepare data for Excel
-    const excelData = records.map((record: {
-      incomingDate: Date;
-      station: string;
-      owner: string;
-      description: string;
-      partNo: string;
-      serialNo: string;
-      quantity: string;
-      type: string;
-      location: string;
-      hasExpireDate: boolean;
-      expireDate: Date | null;
-      hasInspection: boolean;
-      inspectionResult: string | null;
-      inspectionFailure: string | null;
-      customFailure: string | null;
-      hasComment: boolean;
-      comment: string | null;
-      hasAttachments: boolean;
-      Attachment: { fileName: string }[];
-    }) => ({
-      'Incoming Date': format(new Date(record.incomingDate), 'MMM dd, yyyy'),
-      'Station': record.station,
-      'Owner': record.owner,
-      'Description': record.description,
-      'Part No': record.partNo,
-      'Serial No': record.serialNo,
-      'Quantity': record.quantity,
-      'Type': record.type,
-      'Location': record.location,
-      'Expire Date': record.hasExpireDate && record.expireDate 
-        ? format(new Date(record.expireDate), 'MMM dd, yyyy')
-        : 'N/A',
-      'Inspection Result': record.hasInspection 
-        ? record.inspectionResult 
-        : 'N/A',
-      'Inspection Failure': record.hasInspection && record.inspectionResult === 'Failed'
-        ? (record.inspectionFailure === 'Other' ? record.customFailure : record.inspectionFailure)
-        : 'N/A',
-      'Comments': record.hasComment && record.comment 
-        ? record.comment 
-        : 'N/A',
-      'Attachments': record.hasAttachments && record.Attachment.length > 0
-        ? record.Attachment.map(a => a.fileName).join(', ')
-        : 'N/A',
-    }));
+    // Get selected column keys
+    const selectedColumnKeys = Object.keys(selectedColumns).filter(key => selectedColumns[key]);
+    
+    // Prepare data for Excel with only selected columns
+    const excelData = records.map((record: any) => {
+      const row: Record<string, any> = {};
+      
+      selectedColumnKeys.forEach(columnKey => {
+        const columnConfig = COLUMN_MAPPING[columnKey as keyof typeof COLUMN_MAPPING];
+        if (columnConfig) {
+          row[columnConfig.header] = columnConfig.extract(record);
+        }
+      });
+      
+      return row;
+    });
 
     // Create workbook and worksheet
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(excelData);
 
-    // Set column widths
-    const colWidths = [
-      { wch: 12 }, // Incoming Date
-      { wch: 10 }, // Station
-      { wch: 12 }, // Owner
-      { wch: 30 }, // Description
-      { wch: 15 }, // Part No
-      { wch: 15 }, // Serial No
-      { wch: 10 }, // Quantity
-      { wch: 12 }, // Type
-      { wch: 12 }, // Location
-      { wch: 12 }, // Expire Date
-      { wch: 15 }, // Inspection Result
-      { wch: 20 }, // Inspection Failure
-      { wch: 30 }, // Comments
-      { wch: 30 }, // Attachments
-    ];
+    // Set column widths based on selected columns
+    const colWidths = selectedColumnKeys.map(columnKey => {
+      const columnConfig = COLUMN_MAPPING[columnKey as keyof typeof COLUMN_MAPPING];
+      return { wch: columnConfig?.width || 15 };
+    });
     ws['!cols'] = colWidths;
 
     // Add worksheet to workbook

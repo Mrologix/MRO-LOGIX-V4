@@ -8,7 +8,6 @@ import {
   Settings2Icon, 
   UsersIcon, 
   Clock3Icon,
-  SearchIcon,
   ShieldAlertIcon,
   FileSpreadsheetIcon,
   TriangleAlertIcon,
@@ -105,13 +104,8 @@ const menuItems = [
     icon: IdCardIcon,
   },
   {
-    title: "Internal Audits",
-    url: "/dashboard/internal-audits",
-    icon: SearchIcon,
-  },
-  {
-    title: "SMS Audits",
-    url: "/dashboard/sms-audits",
+    title: "Audits Management",
+    url: "/dashboard/audits-management",
     icon: ShieldAlertIcon,
   },
   {
@@ -120,7 +114,7 @@ const menuItems = [
     icon: FileSpreadsheetIcon,
   },
   {
-    title: "SDR Reports",
+    title: "Service Difficulty Reports",
     url: "/dashboard/sdr-reports",
     icon: TriangleAlertIcon,
   },
@@ -304,7 +298,7 @@ export function AppSidebar() {
             <SidebarGroupContent>
               <SidebarMenu>
                 {menuItems
-                  .filter(item => ["Internal Audits", "SMS Audits", "SMS Reports", "SDR Reports"].includes(item.title))
+                  .filter(item => ["Audits Management", "SMS Reports", "Service Difficulty Reports"].includes(item.title))
                   .map((item) => {
                     const isActive = pathname === item.url;
                     return (

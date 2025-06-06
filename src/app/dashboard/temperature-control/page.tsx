@@ -2,15 +2,43 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, ThermometerSnowflake, Thermometer, Droplets } from "lucide-react";
+import { Plus, ThermometerSnowflake, Thermometer, Droplets, Settings } from "lucide-react";
 import { AddTemperatureControlForm } from "./AddTemperatureControlForm";
 import { TemperatureControlList } from "./TemperatureControlList";
+import { TemperatureConfigDialog } from "./TemperatureConfigDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+interface ConfigData {
+  tempNormalMin: number;
+  tempNormalMax: number;
+  tempMediumMin: number;
+  tempMediumMax: number;
+  tempHighMin: number;
+  humidityNormalMin: number;
+  humidityNormalMax: number;
+  humidityMediumMin: number;
+  humidityMediumMax: number;
+  humidityHighMin: number;
+}
 
 export default function TemperatureControlPage() {
   const [showForm, setShowForm] = useState(false);
+  const [showConfigDialog, setShowConfigDialog] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [configRefreshTrigger, setConfigRefreshTrigger] = useState(0);
   const [totalRecords, setTotalRecords] = useState(0);
+  const [config, setConfig] = useState<ConfigData>({
+    tempNormalMin: 0,
+    tempNormalMax: 24,
+    tempMediumMin: 25,
+    tempMediumMax: 35,
+    tempHighMin: 36,
+    humidityNormalMin: 0,
+    humidityNormalMax: 35,
+    humidityMediumMin: 36,
+    humidityMediumMax: 65,
+    humidityHighMin: 66,
+  });
 
   useEffect(() => {
     // Fetch the total number of records
@@ -29,10 +57,44 @@ export default function TemperatureControlPage() {
     fetchTotalRecords();
   }, [refreshTrigger]);
 
+  useEffect(() => {
+    // Fetch configuration
+    const fetchConfig = async () => {
+      try {
+        const response = await fetch('/api/temperature-humidity-config');
+        const result = await response.json();
+        
+        if (result.success) {
+          setConfig({
+            tempNormalMin: result.data.tempNormalMin,
+            tempNormalMax: result.data.tempNormalMax,
+            tempMediumMin: result.data.tempMediumMin,
+            tempMediumMax: result.data.tempMediumMax,
+            tempHighMin: result.data.tempHighMin,
+            humidityNormalMin: result.data.humidityNormalMin,
+            humidityNormalMax: result.data.humidityNormalMax,
+            humidityMediumMin: result.data.humidityMediumMin,
+            humidityMediumMax: result.data.humidityMediumMax,
+            humidityHighMin: result.data.humidityHighMin,
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching configuration:', error);
+      }
+    };
+    
+    fetchConfig();
+  }, [configRefreshTrigger]);
+
   const handleFormClose = () => {
     setShowForm(false);
     // Trigger a refresh of the list when form is closed (after successful submission)
     setRefreshTrigger(prev => prev + 1);
+  };
+
+  const handleConfigUpdate = () => {
+    setConfigRefreshTrigger(prev => prev + 1);
+    setRefreshTrigger(prev => prev + 1); // Also refresh the list to apply new colors
   };
 
   return (
@@ -42,13 +104,23 @@ export default function TemperatureControlPage() {
           <ThermometerSnowflake className="h-6 w-6" />
           <h1 className="text-3xl font-bold">Temperature Control</h1>
         </div>
-        <Button 
-          onClick={() => setShowForm(true)}
-          className="bg-white text-black border border-black hover:bg-gray-50"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Temperature
-        </Button>
+        <div className="flex space-x-2">
+          <Button 
+            onClick={() => setShowConfigDialog(true)}
+            variant="outline"
+            className="border-gray-300 hover:bg-gray-50"
+          >
+            <Settings className="mr-2 h-4 w-4" />
+            Configure Ranges
+          </Button>
+          <Button 
+            onClick={() => setShowForm(true)}
+            className="bg-white text-black border border-black hover:bg-gray-50"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Temperature
+          </Button>
+        </div>
       </div>
 
       {/* Range Indicator Cards */}
@@ -80,15 +152,21 @@ export default function TemperatureControlPage() {
             <div className="space-y-1">
               <div className="flex justify-between items-center">
                 <span className="text-xs">Normal:</span>
-                <span className="text-xs font-semibold text-blue-600">0-24°C</span>
+                <span className="text-xs font-semibold text-blue-600">
+                  {config.tempNormalMin}-{config.tempNormalMax}°C
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs">Medium:</span>
-                <span className="text-xs font-semibold text-yellow-600">25-35°C</span>
+                <span className="text-xs font-semibold text-yellow-600">
+                  {config.tempMediumMin}-{config.tempMediumMax}°C
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs">High:</span>
-                <span className="text-xs font-semibold text-red-600">Above 35°C</span>
+                <span className="text-xs font-semibold text-red-600">
+                  Above {config.tempHighMin - 1}°C
+                </span>
               </div>
             </div>
           </CardContent>
@@ -106,15 +184,21 @@ export default function TemperatureControlPage() {
             <div className="space-y-1">
               <div className="flex justify-between items-center">
                 <span className="text-xs">Normal:</span>
-                <span className="text-xs font-semibold text-blue-600">0-35%</span>
+                <span className="text-xs font-semibold text-blue-600">
+                  {config.humidityNormalMin}-{config.humidityNormalMax}%
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs">Medium:</span>
-                <span className="text-xs font-semibold text-yellow-600">36-65%</span>
+                <span className="text-xs font-semibold text-yellow-600">
+                  {config.humidityMediumMin}-{config.humidityMediumMax}%
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-xs">High:</span>
-                <span className="text-xs font-semibold text-red-600">Above 65%</span>
+                <span className="text-xs font-semibold text-red-600">
+                  Above {config.humidityHighMin - 1}%
+                </span>
               </div>
             </div>
           </CardContent>
@@ -123,9 +207,21 @@ export default function TemperatureControlPage() {
 
       {showForm && (
         <AddTemperatureControlForm onClose={handleFormClose} />
-      )}      {/* Temperature Control Records List */}
+      )}
+
+      {/* Configuration Dialog */}
+      <TemperatureConfigDialog 
+        isOpen={showConfigDialog}
+        onClose={() => setShowConfigDialog(false)}
+        onConfigUpdate={handleConfigUpdate}
+      />
+
+      {/* Temperature Control Records List */}
       <div className="mt-8">
-        <TemperatureControlList refreshTrigger={refreshTrigger} />
+        <TemperatureControlList 
+          refreshTrigger={refreshTrigger} 
+          config={config}
+        />
       </div>
     </div>
   );

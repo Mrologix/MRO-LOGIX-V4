@@ -21,7 +21,7 @@ const AIChatHeader = () => {
         {/* Meta line */}
         <div className="flex items-center gap-2 text-sm text-black">
           <Sparkles size={18} strokeWidth={1.5} className="text-[#06b6d4]" />
-          <span>Powered by OpenAI</span>
+          <span>Powered by OpenAI gpt-4o-mini</span>
         </div>
       </header>
         </div>

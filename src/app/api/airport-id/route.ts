@@ -31,7 +31,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     // Authenticate user to get user ID for activity logging
-    const token = (await cookies()).get('auth_token')?.value;
+    const token = (await cookies()).get('token')?.value;
     let currentUser = null;
     
     if (token) {

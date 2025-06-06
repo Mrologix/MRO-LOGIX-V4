@@ -198,15 +198,15 @@ export default function DocumentManagementPage() {
     }
   };
 
-  const getStatusBadgeVariant = (status: Manual["status"]) => {
+  const getStatusBadgeStyle = (status: Manual["status"]) => {
     switch (status) {
       case "APPROVED":
-        return "default";
+        return "bg-green-100 text-green-800 hover:bg-green-200";
       case "ARCHIVED":
-        return "destructive";
+        return "bg-red-100 text-red-800 hover:bg-red-200";
       case "DRAFT":
       default:
-        return "secondary";
+        return "bg-orange-100 text-orange-800 hover:bg-orange-200";
     }
   };
 
@@ -261,7 +261,7 @@ export default function DocumentManagementPage() {
                     {manual.revision}
                   </TableCell>
                   <TableCell className="whitespace-nowrap py-1">
-                    <Badge variant={getStatusBadgeVariant(manual.status)}>
+                    <Badge className={getStatusBadgeStyle(manual.status)}>
                       {getStatusLabel(manual.status)}
                     </Badge>
                   </TableCell>
@@ -303,8 +303,13 @@ export default function DocumentManagementPage() {
             <Button size="icon" variant="outline" title="Download" onClick={handleDownload} disabled={!selectedManual}>
               <DownloadIcon className="w-5 h-5" />
             </Button>
-            <Button size="icon" variant="outline" title="Delete" onClick={() => setIsDeleteDialogOpen(true)} disabled={!selectedManual}>
-              <Trash2Icon className="w-5 h-5" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsDeleteDialogOpen(true)}
+              className="text-red-600 hover:text-red-800 hover:bg-red-50"
+            >
+              <Trash2Icon className="h-4 w-4" />
             </Button>
             <Button size="icon" variant="outline" title="Share" onClick={handleShare} disabled={!selectedManual}>
               <Share2Icon className="w-5 h-5" />

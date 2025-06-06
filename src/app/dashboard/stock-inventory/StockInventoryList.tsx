@@ -88,7 +88,7 @@ export function StockInventoryList({ searchTerm }: StockInventoryListProps) {
   const isTabletLandscape = useIsTabletLandscape();
   const isMobile = useIsMobile();
 
-  const filterOptions: ('current' | 'expiring' | 'expired' | 'failed' | 'inspected' | null)[] = ['current', 'expiring', 'expired', 'failed', 'inspected', null];
+  const filterOptions: ('current' | 'expiring' | 'expired' | 'failed' | 'inspected' | null)[] = [null, 'current', 'expiring', 'expired', 'failed', 'inspected'];
 
   useEffect(() => {
     const fetchRecords = async () => {

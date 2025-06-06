@@ -12,6 +12,7 @@ NavigationMenuTrigger,
 import { Menu, MoveRight, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { ThemeToggle } from "./theme-toggle";
 
 const Header1 = () => {
 const navigationItems = [
@@ -142,6 +143,7 @@ return (
         </NavigationMenu>
         </div>
         <div className="flex justify-end w-full gap-4">
+        <ThemeToggle />
         <Link href="/contact">
           <Button variant="ghost" className="hidden md:inline">
               Book a demo
@@ -192,6 +194,10 @@ return (
                 </div>
             ))}
             <div className="flex flex-col gap-4 mt-4 pt-4 border-t">
+              <div className="flex justify-between items-center">
+                <span className="text-lg">Theme</span>
+                <ThemeToggle />
+              </div>
               <Link
                 href="/register"
                 className="flex justify-between items-center"

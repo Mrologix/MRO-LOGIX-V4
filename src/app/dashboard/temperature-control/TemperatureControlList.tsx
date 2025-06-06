@@ -23,11 +23,25 @@ interface TemperatureControlRecord {
   createdAt: string;
 }
 
-interface TemperatureControlListProps {
-  refreshTrigger?: number;
+interface ConfigData {
+  tempNormalMin: number;
+  tempNormalMax: number;
+  tempMediumMin: number;
+  tempMediumMax: number;
+  tempHighMin: number;
+  humidityNormalMin: number;
+  humidityNormalMax: number;
+  humidityMediumMin: number;
+  humidityMediumMax: number;
+  humidityHighMin: number;
 }
 
-export function TemperatureControlList({ refreshTrigger }: TemperatureControlListProps) {
+interface TemperatureControlListProps {
+  refreshTrigger?: number;
+  config: ConfigData;
+}
+
+export function TemperatureControlList({ refreshTrigger, config }: TemperatureControlListProps) {
   const [records, setRecords] = useState<TemperatureControlRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -95,15 +109,15 @@ export function TemperatureControlList({ refreshTrigger }: TemperatureControlLis
     return location === 'Other' && customLocation ? customLocation : location;
   };
   const getTemperatureColor = (temp: number) => {
-    if (temp >= 0 && temp <= 24) return "text-blue-600"; // Normal
-    if (temp > 24 && temp <= 35) return "text-yellow-600"; // Medium
-    return "text-red-600"; // High (Above 35)
+    if (temp >= config.tempNormalMin && temp <= config.tempNormalMax) return "text-blue-600"; // Normal
+    if (temp >= config.tempMediumMin && temp <= config.tempMediumMax) return "text-yellow-600"; // Medium
+    return "text-red-600"; // High
   };
 
   const getHumidityColor = (humidity: number) => {
-    if (humidity >= 0 && humidity <= 35) return "text-blue-600"; // Normal
-    if (humidity > 35 && humidity <= 65) return "text-yellow-600"; // Medium
-    return "text-red-600"; // High (Above 65)
+    if (humidity >= config.humidityNormalMin && humidity <= config.humidityNormalMax) return "text-blue-600"; // Normal
+    if (humidity >= config.humidityMediumMin && humidity <= config.humidityMediumMax) return "text-yellow-600"; // Medium
+    return "text-red-600"; // High
   };
 
   const handleDelete = async (recordId: string) => {

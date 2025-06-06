@@ -66,7 +66,7 @@ export function AddStockInventoryForm({ onClose }: AddStockInventoryFormProps) {
 
   const stationOptions = ['STA-1', 'STA-2', 'STA-3', 'STA-4', 'STA-5', 'STA-6', 'STA-7', 'STA-8', 'STA-9', 'STA-10', 'Other'];
   const ownerOptions = ['Airline-1', 'Airline-2', 'Airline-3', 'Airline-4', 'Airline-5', 'Airline-6', 'Airline-7', 'Airline-8', 'Airline-9', 'Airline-10', 'Other'];
-  const typeOptions = ['Wheel', 'Tool', 'Part', 'Eng-Oil', 'Hyd-Oil', 'Grease', 'Bolt', 'Torque', 'Other'];
+  const typeOptions = ['Brake Assy', 'Wheel', 'Tool', 'Part', 'Eng-Oil', 'Hyd-Oil', 'Grease', 'Bolt', 'Torque', 'Other'];
   const locationOptions = ['SHELF-1A', 'SHELF-1B', 'SHELF-1C', 'SHELF-1D', 'SHELF-1E', 'SHELF-1F', 'SHELF-1G', 'SHELF-1H', 'SHELF-1I', 'SHELF-1J', 'Other'];
   const inspectionFailureOptions = ['Doc Missing', 'Damaged', 'Expired', 'Other'];
 

@@ -49,7 +49,6 @@ export default function UserActivityPage() {
   const [page, setPage] = useState(1);
   const [actionFilter, setActionFilter] = useState("all_actions");
   const [resourceTypeFilter, setResourceTypeFilter] = useState("all_resources");
-  const [userFilter, setUserFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredActivities = useMemo(() => {
@@ -58,9 +57,6 @@ export default function UserActivityPage() {
     return data.activities.filter(activity => {
       const matchesSearch = searchTerm === "" || 
         activity.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        activity.user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (activity.resourceTitle && activity.resourceTitle.toLowerCase().includes(searchTerm.toLowerCase()));
       
       return matchesSearch;
@@ -77,7 +73,6 @@ export default function UserActivityPage() {
       
       if (actionFilter && actionFilter !== "all_actions") params.append("action", actionFilter);
       if (resourceTypeFilter && resourceTypeFilter !== "all_resources") params.append("resourceType", resourceTypeFilter);
-      if (userFilter) params.append("userId", userFilter);
 
       const response = await fetch(`/api/user-activity?${params}`);
       const result = await response.json();
@@ -93,11 +88,11 @@ export default function UserActivityPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, actionFilter, resourceTypeFilter, userFilter]);
+  }, [page, actionFilter, resourceTypeFilter]);
 
   useEffect(() => {
     fetchActivities();
-  }, [page, actionFilter, resourceTypeFilter, userFilter, fetchActivities]);
+  }, [page, actionFilter, resourceTypeFilter, fetchActivities]);
 
   const getActionBadgeColor = (action: string) => {
     if (action.includes("LOGIN")) return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
@@ -141,8 +136,8 @@ export default function UserActivityPage() {
             <ActivityIcon className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">User Activity</h1>
-            <p className="text-muted-foreground">Monitor all user actions and system activities</p>
+            <h1 className="text-3xl font-bold">My Activity</h1>
+            <p className="text-muted-foreground">View your recent actions and system activities</p>
           </div>
         </div>
         <Button onClick={fetchActivities} disabled={loading} variant="outline">
@@ -205,7 +200,7 @@ export default function UserActivityPage() {
               <div className="relative">
                 <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search activities..."
+                  placeholder="Search your activities..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -254,7 +249,6 @@ export default function UserActivityPage() {
                   onClick={() => {
                     setActionFilter("all_actions");
                     setResourceTypeFilter("all_resources");
-                    setUserFilter("");
                     setSearchTerm("");
                   }}
                 >
@@ -269,9 +263,9 @@ export default function UserActivityPage() {
       {/* Activities Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Recent Activities</CardTitle>
+          <CardTitle>Your Recent Activities</CardTitle>
           <CardDescription>
-            {data ? `Showing ${filteredActivities.length} of ${data.pagination.total} activities` : "Loading activities..."}
+            {data ? `Showing ${filteredActivities.length} of ${data.pagination.total} of your activities` : "Loading activities..."}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -283,7 +277,7 @@ export default function UserActivityPage() {
             <div className="text-center py-8 text-muted-foreground">
               <ActivityIcon className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p className="text-lg font-medium">No activities found</p>
-              <p>Try adjusting your filters or search terms</p>
+              <p>You haven't performed any actions yet, or try adjusting your filters</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
