@@ -483,8 +483,9 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="p-4 text-xs text-muted-foreground">
         <div className="flex flex-col space-y-1">
-          <p>MRO Logix v1.0.0</p>
+          <p>V2 6-JUN-2025 12:33pm</p>
           <p>&copy; 2025 MRO Logix</p>
+          <p>MRO Logix v1.0.0</p>
         </div>
       </SidebarFooter>
     </Sidebar>
